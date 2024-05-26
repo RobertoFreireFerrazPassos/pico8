@@ -118,6 +118,23 @@ enemy = class:new({
 		y=0,
 		box={x=1,y=2,w=6,h=5},
 		control = function(_ENV)
+			local xy,lx,ly,dfx,dfy={x=x,y=y},x,y,flr(global.p.x)-flr(x),flr(global.p.y)-flr(y)
+			
+			if abs(dfx)>abs(dfy) and dfx~=0 then
+				xy.x=x+dfx/(abs(dfx)*10)
+			end
+			
+			if abs(dfy)>abs(dfx) and dfy~=0 then
+			 xy.y=y+dfy/(abs(dfy)*10)
+			end
+			
+			if collideflag(xy.x,y,1)==false then
+				x=xy.x -- no collsion in x
+			end
+			
+			if collideflag(x,xy.y,1)==false then
+				y=xy.y -- no collsion in y
+			end
 		end
 })
 
