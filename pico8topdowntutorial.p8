@@ -81,29 +81,20 @@ p = {
 	y=63,
 	box={x=1,y=1,w=6,h=5},
 	control = function()
-		local lx,ly,ce=p.x,p.y,false
+		local lx,ly,cex,cey=p.x,p.y,false,false
 		local xy=getxy()
 		
 		foreach(enemies, function(e)
-			if rects_overlap({x=xy.x,y=p.y,box=p.box},e) then
-				ce=true
-			end
+			if rects_overlap({x=xy.x,y=p.y,box=p.box},e) then cex=true	end
+			if rects_overlap({x=p.x,y=xy.y,box=p.box},e) then cey=true	end
 		end)
 		
-		if ce==false and collideflag(xy.x,p.y,1)==false then
-			p.x=xy.x
+		if cex==false and collideflag(xy.x,p.y,1)==false then
+			p.x=xy.x -- no collsion in x
 		end
 		
-		ce=false
-		
-		foreach(enemies, function(e)
-			if rects_overlap({x=p.x,y=xy.y,box=p.box},e) then
-				ce=true
-			end
-		end)
-		
-		if ce==false and collideflag(p.x,xy.y,1)==false then
-			p.y=xy.y
+		if cey==false and collideflag(p.x,xy.y,1)==false then
+			p.y=xy.y -- no collsion in y
 		end
 	end
 }
