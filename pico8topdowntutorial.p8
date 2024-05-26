@@ -42,9 +42,8 @@ butarr[0]=0
 dirx={-1,1, 0,0,-0.7, 0.7,0.7,-0.7}
 diry={ 0,0,-1,1,-0.7,-0.7,0.7, 0.7}
 
-function getxy(dir)
-  local a=p.x
-  local b=p.y
+function getxy()
+  local a,b,dir=p.x,p.y,butarr[btn()&0b1111]
 
   if lastdir!=dir and dir>=5 then
 	  a=flr(a)+0.5
@@ -61,12 +60,12 @@ function getxy(dir)
 end
 
 p = {
-	sprt=1,
+	sprt=2,
 	x=63,
 	y=63,
 	control = function()
-		local lx,ly,dir=p.x,p.y,butarr[btn()&0b1111]
-		local xy=getxy(dir)
+		local lx,ly=p.x,p.y
+		local xy=getxy()
 		
 		if collideflag(xy.x,p.y,1)==false then
 			p.x=xy.x
