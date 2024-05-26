@@ -54,13 +54,15 @@ function rects_overlap(o1,o2)
          o1y + o1.box.h - 1 > o2y
 end
 
-class = {
+global=_ENV
+
+class = setmetatable({
 		new=function(self,tbl)
 			tbl = tbl or {}
 			
 			return setmetatable(tbl,{ __index=self})
 		end
-}
+},{ __index=_ENV})
 -->8
 -- player --
 butarr={1,2,0,3,5,6,3,4,8,7,4,0,1,2,0}
