@@ -2,7 +2,6 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 function _init()
-	
 end
 
 function _update60()
@@ -13,7 +12,10 @@ function _draw()
 	cls()
 	map()
 	drawsprite(p)
-	drawsprite(e)
+	
+	foreach(enemies, function(e)
+		drawsprite(e)
+	end)
 end
 -->8
 -- utils --
@@ -79,27 +81,51 @@ p = {
 	y=63,
 	box={x=1,y=1,w=6,h=5},
 	control = function()
-		local lx,ly=p.x,p.y
+		local lx,ly,ce=p.x,p.y,false
 		local xy=getxy()
 		
-		if rects_overlap({x=xy.x,y=p.y,box=p.box},e)==false
-			and collideflag(xy.x,p.y,1)==false then
+		foreach(enemies, function(e)
+			if rects_overlap({x=xy.x,y=p.y,box=p.box},e) then
+				ce=true
+			end
+		end)
+		
+		if ce==false and collideflag(xy.x,p.y,1)==false then
 			p.x=xy.x
 		end
 		
-		if rects_overlap({x=p.x,y=xy.y,box=p.box},e)==false
-		 and collideflag(p.x,xy.y,1)==false then
+		ce=false
+		
+		foreach(enemies, function(e)
+			if rects_overlap({x=p.x,y=xy.y,box=p.box},e) then
+				ce=true
+			end
+		end)
+		
+		if ce==false and collideflag(p.x,xy.y,1)==false then
 			p.y=xy.y
 		end
 	end
 }
 -->8
 -- enemy --
-e = {
-	sprt=2,
-	x=24,
-	y=24,
-	box={x=1,y=2,w=6,h=5},
+enemy = {
+		sprt=2,
+		box={x=1,y=2,w=6,h=5},
+}
+
+function createenemy(x,y)
+	return setmetatable(
+		{x=x,y=y},
+		{ __index=enemy })
+end
+
+enemies={
+	createenemy(24,24),
+	createenemy(16,24),
+	createenemy(24,77),
+	createenemy(24,84),
+	createenemy(33,84)
 }
 __gfx__
 00000000e000000e3000000300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
