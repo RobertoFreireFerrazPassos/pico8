@@ -5,17 +5,19 @@ function _init()
 end
 
 function _update60()
+	foreach(enemies, function(e)
+		e:control()
+	end)
 	p.control()
 end
 
 function _draw()
 	cls()
 	map()
-	drawsprite(p)
-	
 	foreach(enemies, function(e)
 		drawsprite(e)
 	end)
+	drawsprite(p)
 end
 -->8
 -- utils --
@@ -51,6 +53,14 @@ function rects_overlap(o1,o2)
          o1y < o2y + o2.box.h and
          o1y + o1.box.h - 1 > o2y
 end
+
+class = {
+		new=function(self,tbl)
+			tbl = tbl or {}
+			
+			return setmetatable(tbl,{ __index=self})
+		end
+}
 -->8
 -- player --
 butarr={1,2,0,3,5,6,3,4,8,7,4,0,1,2,0}
@@ -100,23 +110,20 @@ p = {
 }
 -->8
 -- enemy --
-enemy = {
+enemy = class:new({
 		sprt=2,
+		x=0,
+		y=0,
 		box={x=1,y=2,w=6,h=5},
-}
-
-function createenemy(x,y)
-	return setmetatable(
-		{x=x,y=y},
-		{ __index=enemy })
-end
+		control = function(_ENV)
+		end
+})
 
 enemies={
-	createenemy(24,24),
-	createenemy(16,24),
-	createenemy(24,77),
-	createenemy(24,84),
-	createenemy(33,84)
+	enemy:new({x=24,y=24}),
+	enemy:new({x=16,y=24}),
+	enemy:new({x=24,y=84}),
+	enemy:new({x=16,y=90})
 }
 __gfx__
 00000000e000000e3000000300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
