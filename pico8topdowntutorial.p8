@@ -14,13 +14,17 @@ end
 function _draw()
 	cls()
 	map()
+	p:draw()
 	foreach(enemies, function(e)
 		e:draw()
 	end)
-	p:draw()
 end
 -->8
 -- utils --
+getsgn = function(v)
+	return sgn(v)==0 and 0 or sgn(v)
+end
+
 pointcollideflag=function(x,y,flag) 
   return fget(mget(x/8,y/8))==flag
 end
@@ -89,8 +93,8 @@ end
 
 p = {
 	sprt=1,
-	x=48,
-	y=63,
+	x=8,
+	y=8,
 	box={x=1,y=1,w=6,h=5},
 	control = function()
 		local lx,ly,cex,cey=p.x,p.y,false,false
@@ -125,20 +129,21 @@ enemy = class:new({
 		yd=0,-- step y 0 upto 8
 		mx=0,
 		my=0,
+		tmr=60,
+		spd=0.05, -- speed
 		st=0,-- 0- far 1-wall  2-find
 		box={x=1,y=2,w=6,h=5},
-		control = function(_ENV)
+		findplayer = function(_ENV)
 			xd=flr((p.x-x)/fov)
-			yd=flr((p.y-y)/fov)
-			st=2
-			
+		 yd=flr((p.y-y)/fov)
 			if abs(xd)>=8 or abs(yd)>=8 then
 				st=0
 				return
 			end
 			
 			mx=x+4
-		 my=y+4
+		 my=y+4 
+	 	st=2
 		 
 		 for i=1,fov do
 		 	mx+=xd
@@ -148,7 +153,31 @@ enemy = class:new({
 		 	end
 		 end
 		end,
+		move = function(_ENV)
+			tmr-=0.5			
+			
+			if abs(xd)>=abs(yd) then
+				x+=getsgn(xd)*spd
+			else
+			 y+=getsgn(yd)*spd
+			end
+				
+			if tmr<=0 then
+				tmr=60
+				st=0
+			end
+		end,
+		control = function(_ENV)
+			if st==0 then
+				findplayer(_ENV)
+			elseif  st==1 then
+				findplayer(_ENV)
+			elseif st==2 then
+				move(_ENV)
+			end
+		end,
 		draw = function(_ENV)
+		 line(x+4, y+4, mx, my)
 			pal(11,11-st)			
 			spr(sprt,x,y)
 		end
