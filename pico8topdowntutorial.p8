@@ -119,8 +119,6 @@ p = {
 }
 -->8
 -- enemy --
-fov=5--field of view number of sprites
-
 enemy = class:new({
 		sprt=2,
 		x=0,
@@ -134,6 +132,11 @@ enemy = class:new({
 		st=0,-- 0- far 1-wall  2-find
 		box={x=1,y=2,w=6,h=5},
 		findplayer = function(_ENV)
+			local fov=5--field of view number of sprites
+			if (p.x-x)> 25 or (p.y-y)<25 then
+			 fov=3
+			end
+			
 			xd=flr((p.x-x)/fov)
 		 yd=flr((p.y-y)/fov)
 			if abs(xd)>=8 or abs(yd)>=8 then
@@ -162,13 +165,29 @@ enemy = class:new({
 				getsgn(yd),
 				false,
 				false
-				
+			
 			if abs(xd)>=abs(yd) then
 				xy.x=x+xsd*spd
-				xyc.x=x+xsd*2--2>spd for collision detection
+				xyc.x=x+xsd*2--2 must be > spd for collision detection
+			 
+			 -- try to go around wall
+				if collideflag(xy.x,y,1) then
+					xy.x=x
+				 xyc.x=x
+					xy.y=y+ysd*spd
+			 	xyc.y=y+ysd*2
+				end
 			else
 			 xy.y=y+ysd*spd
-			 xyc.y=y+ysd*2--2>spd for collision detection
+			 xyc.y=y+ysd*2
+			 
+			 -- try to go around wall
+			 if collideflag(x,xy.y,1) then
+					xy.y=y
+			  xyc.y=y
+					xy.x=x+xsd*spd
+				 xyc.x=x+xsd*2				
+				end
 			end
 			
 			foreach(enemies, function(e)
@@ -201,37 +220,14 @@ enemy = class:new({
 			end
 		end,
 		draw = function(_ENV)
-		 --line(x+4, y+4, mx, my)
+		 line(x+4, y+4, mx, my)
 			pal(11,11-st)			
 			spr(sprt,x,y)
 		end
 })
 
 enemies={
-	enemy:new({x=8,y=20}),
-	enemy:new({x=8,y=30}),
-	enemy:new({x=8,y=40}),
-	enemy:new({x=8,y=50}),
-	enemy:new({x=8,y=60}),
-	enemy:new({x=8,y=70}),
-	enemy:new({x=20,y=20}),
-	enemy:new({x=20,y=30}),
-	enemy:new({x=20,y=40}),
-	enemy:new({x=20,y=50}),
-	enemy:new({x=20,y=60}),
-	enemy:new({x=20,y=70}),
-	enemy:new({x=80,y=20}),
-	enemy:new({x=80,y=30}),
-	enemy:new({x=80,y=40}),
-	enemy:new({x=80,y=50}),
-	enemy:new({x=80,y=60}),
-	enemy:new({x=80,y=70}),
-	enemy:new({x=90,y=20}),
-	enemy:new({x=90,y=30}),
-	enemy:new({x=90,y=40}),
-	enemy:new({x=90,y=50}),
-	enemy:new({x=90,y=60}),
-	enemy:new({x=90,y=70}),
+	enemy:new({x=8,y=20})
 }
 __gfx__
 00000000e000000e3000000300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
