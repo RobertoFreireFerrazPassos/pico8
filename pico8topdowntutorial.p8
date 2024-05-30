@@ -145,7 +145,7 @@ enemy = class:new({
 		 my=y+4 
 	 	st=2
 		 
-		 for i=1,fov do
+		 for i=1,fov-1 do
 		 	mx+=xd
 		 	my+=yd		 	
 		 	if pointcollideflag(mx,my,1) then
@@ -158,17 +158,17 @@ enemy = class:new({
 			local xy,xyc,xsd,ysd,cex,cey=
 				{x=x,y=y},
 				{x=x,y=y},
-				getsgn(xd)*spd,
-				getsgn(yd)*spd,
+				getsgn(xd),
+				getsgn(yd),
 				false,
 				false
 				
 			if abs(xd)>=abs(yd) then
-				xy.x=x+xsd
-				xyc.x=x+getsgn(xd)*2
+				xy.x=x+xsd*spd
+				xyc.x=x+xsd*2--2>spd for collision detection
 			else
-			 xy.y=y+ysd
-			 xyc.y=y+getsgn(yd)*2
+			 xy.y=y+ysd*spd
+			 xyc.y=y+ysd*2--2>spd for collision detection
 			end
 			
 			foreach(enemies, function(e)
@@ -201,7 +201,7 @@ enemy = class:new({
 			end
 		end,
 		draw = function(_ENV)
-		 --line(x+4, y+4, mx, my)
+		 line(x+4, y+4, mx, my)
 			pal(11,11-st)			
 			spr(sprt,x,y)
 		end
