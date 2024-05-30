@@ -22,7 +22,7 @@ end
 -->8
 -- utils --
 getsgn = function(v)
-	return sgn(v)==0 and 0 or sgn(v)
+	return v==0 and 0 or sgn(v)
 end
 
 pointcollideflag=function(x,y,flag) 
@@ -193,7 +193,7 @@ enemy = class:new({
 			end
 		end,
 		draw = function(_ENV)
-		 line(x+4, y+4, mx, my)
+		 --line(x+4, y+4, mx, my)
 			pal(11,11-st)			
 			spr(sprt,x,y)
 		end
@@ -202,7 +202,9 @@ enemy = class:new({
 enemies={
 	enemy:new({x=80,y=80}),
 	enemy:new({x=40,y=80}),
-	enemy:new({x=80,y=40})
+	enemy:new({x=80,y=40}),
+	enemy:new({x=8,y=40}),
+	enemy:new({x=8,y=60})
 }
 __gfx__
 00000000e000000e3000000300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
