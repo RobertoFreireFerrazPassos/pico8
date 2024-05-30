@@ -155,18 +155,26 @@ enemy = class:new({
 		end,
 		move = function(_ENV)
 			tmr-=0.5			
-			local xy,cex,cey={x=0,y=0},false,false
-			
+			local xy,xyc,xsd,ysd,cex,cey=
+				{x=x,y=y},
+				{x=x,y=y},
+				getsgn(xd)*spd,
+				getsgn(yd)*spd,
+				false,
+				false
+				
 			if abs(xd)>=abs(yd) then
-				xy.x=x+getsgn(xd)*spd
+				xy.x=x+xsd
+				xyc.x=x+getsgn(xd)*2
 			else
-			 xy.y=y+getsgn(yd)*spd
+			 xy.y=y+ysd
+			 xyc.y=y+getsgn(yd)*2
 			end
 			
 			foreach(enemies, function(e)
 				if e != _ENV then
-					if rects_overlap({x=xy.x,y=y,box=box},e) then cex=true	end
-				 if rects_overlap({x=x,y=xy.y,box=box},e) then cey=true	end
+					if rects_overlap({x=xyc.x,y=y,box=box},e) then cex=true	end
+				 if rects_overlap({x=x,y=xyc.y,box=box},e) then cey=true	end
 				end				
 			end)
 			
