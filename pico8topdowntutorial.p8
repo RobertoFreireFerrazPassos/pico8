@@ -133,7 +133,7 @@ enemy = class:new({
 		box={x=1,y=2,w=6,h=5},
 		findplayer = function(_ENV)
 			local fov=5--field of view number of sprites
-			if (p.x-x)> 25 or (p.y-y)<25 then
+			if abs(p.x-x)<23 and abs(p.y-y)<23 then
 			 fov=3
 			end
 			
