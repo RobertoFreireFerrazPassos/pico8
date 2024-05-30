@@ -8,7 +8,7 @@ function _update60()
 	foreach(enemies, function(e)
 		e:control()
 	end)
-	p.control()
+	p:control()
 end
 
 function _draw()
@@ -29,7 +29,7 @@ pointcollideflag=function(x,y,flag)
   return fget(mget(x/8,y/8))==flag
 end
 
-collideflag=function(x,y,flag)
+collideflag=function(x,y,box,flag)
 	 for i=x,x+7,7 do
     if (fget(mget(i/8,y/8))==flag) or
          (fget(mget(i/8,(y+7)/8))==flag) then
@@ -91,32 +91,32 @@ function getxy()
 	 return {x=a,y=b}
 end
 
-p = {
+p = class:new({
 	sprt=1,
 	x=8,
 	y=8,
 	box={x=1,y=1,w=6,h=5},
-	control = function()
-		local lx,ly,cex,cey=p.x,p.y,false,false
+	control = function(_ENV)
+		local lx,ly,cex,cey=x,y,false,false
 		local xy=getxy()
 		
 		foreach(enemies, function(e)
-			if rects_overlap({x=xy.x,y=p.y,box=p.box},e) then cex=true	end
-			if rects_overlap({x=p.x,y=xy.y,box=p.box},e) then cey=true	end
+			if rects_overlap({x=xy.x,y=y,box=box},e) then cex=true	end
+			if rects_overlap({x=x,y=xy.y,box=box},e) then cey=true	end
 		end)
 		
-		if cex==false and collideflag(xy.x,p.y,1)==false then
-			p.x=xy.x -- no collsion in x
+		if cex==false and collideflag(xy.x,y,box,1)==false then
+			x=xy.x -- no collsion in x
 		end
 		
-		if cey==false and collideflag(p.x,xy.y,1)==false then
-			p.y=xy.y -- no collsion in y
+		if cey==false and collideflag(x,xy.y,box,1)==false then
+			y=xy.y -- no collsion in y
 		end
 	end,
 	draw = function(_ENV)
 		spr(sprt,x,y)
 	end
-}
+})
 -->8
 -- enemy --
 enemy = class:new({
@@ -151,7 +151,7 @@ enemy = class:new({
 		 for i=1,fov-1 do
 		 	mx+=xd
 		 	my+=yd		 	
-		 	if pointcollideflag(mx,my,1) then
+		 	if pointcollideflag(mx,my,box,1) then
 		 	 st=1
 		 	end
 		 end
@@ -171,7 +171,7 @@ enemy = class:new({
 				xyc.x=x+xsd*2--2 must be > spd for collision detection
 			 
 			 -- try to go around wall
-				if collideflag(xy.x,y,1) then
+				if collideflag(xy.x,y,box,1) then
 					xy.x=x
 				 xyc.x=x
 					xy.y=y+ysd*spd
@@ -182,7 +182,7 @@ enemy = class:new({
 			 xyc.y=y+ysd*2
 			 
 			 -- try to go around wall
-			 if collideflag(x,xy.y,1) then
+			 if collideflag(x,xy.y,box,1) then
 					xy.y=y
 			  xyc.y=y
 					xy.x=x+xsd*spd
@@ -197,11 +197,11 @@ enemy = class:new({
 				end				
 			end)
 			
-			if cex==false and collideflag(xy.x,y,1)==false then
+			if cex==false and collideflag(xy.x,y,box,1)==false then
 				x=xy.x -- no collsion in x
 			end
 			
-			if cey==false and collideflag(x,xy.y,1)==false then
+			if cey==false and collideflag(x,xy.y,box,1)==false then
 				y=xy.y -- no collsion in y
 			end
 				
