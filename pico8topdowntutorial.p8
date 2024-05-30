@@ -29,16 +29,16 @@ pointcollideflag=function(x,y,flag)
   return fget(mget(x/8,y/8))==flag
 end
 
-collideflag=function(x,y,box,flag)
-	 for i=x,x+7,7 do
-    if (fget(mget(i/8,y/8))==flag) or
-         (fget(mget(i/8,(y+7)/8))==flag) then
+collideflag=function(x,y,b,flag)
+	 for i=x+b.x,x+b.x+b.w-1,b.w-1 do
+    if (fget(mget(i/8,(y+b.y)/8))==flag) or
+         (fget(mget(i/8,(y+b.y+b.h-1)/8))==flag) then
           return true
     end
   end
-  for i=y,y+7,7 do
-    if (fget(mget(x/8,i/8))==flag) or
-         (fget(mget((x+7)/8,i/8))==flag) then
+  for i=y+b.y,y+b.y+b.h-1,b.h-1 do
+    if (fget(mget((x+b.x)/8,i/8))==flag) or
+         (fget(mget((x+b.x+b.w-1)/8,i/8))==flag) then
           return true
     end
   end  
