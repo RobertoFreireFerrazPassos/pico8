@@ -227,7 +227,29 @@ enemy = class:new({
 })
 
 enemies={
-	enemy:new({x=8,y=20})
+ enemy:new({x=8,y=20}),
+	enemy:new({x=8,y=30}),
+	enemy:new({x=8,y=50}),
+	enemy:new({x=8,y=60}),
+	enemy:new({x=8,y=70}),
+	enemy:new({x=20,y=20}),
+	enemy:new({x=20,y=30}),
+	enemy:new({x=20,y=40}),
+	enemy:new({x=20,y=50}),
+	enemy:new({x=20,y=60}),
+	enemy:new({x=20,y=70}),
+	enemy:new({x=80,y=20}),
+	enemy:new({x=80,y=30}),
+	enemy:new({x=80,y=40}),
+	enemy:new({x=80,y=50}),
+	enemy:new({x=80,y=60}),
+	enemy:new({x=80,y=70}),
+	enemy:new({x=90,y=20}),
+	enemy:new({x=90,y=30}),
+	enemy:new({x=90,y=40}),
+	enemy:new({x=90,y=50}),
+	enemy:new({x=90,y=60}),
+	enemy:new({x=90,y=70})
 }
 __gfx__
 00000000e000000e3000000300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
