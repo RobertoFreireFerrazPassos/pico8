@@ -249,6 +249,10 @@ enemy = class:new({
 			if cey==false and collideflag(x,xy.y,box,1)==false then
 				y=xy.y -- no collsion in y
 			end
+			
+			if collideflag(x,y,box,2) then
+				del(enemies,_ENV)
+			end
 				
 			if tmr<=0 then
 				tmr=60
@@ -256,6 +260,10 @@ enemy = class:new({
 			end
 		end,
 		control = function(_ENV)
+			if act==false then
+				return
+			end
+			
 			if st==0 then
 				findplayer(_ENV)
 			elseif  st==1 then
@@ -264,7 +272,7 @@ enemy = class:new({
 				move(_ENV)
 			end
 		end,
-		draw = function(_ENV)
+		draw = function(_ENV)	
 		 --line(x+4, y+4, mx, my)
 			pal(11,11-st)			
 			spr(sprt,x,y)
@@ -291,15 +299,8 @@ function generatemap()
 	 reload()	 
 end
 
-function collectallpass()
- local c=0
-	foreach(enemies, function(e)
-		if pointcollideflag(e.x+4,e.y+6,2) then
-			c+=1
-		end
-	end)
-	
-	return #enemies == c
+function noenemiespass()
+	return #enemies == 0
 end
 
 function drawbluecircle(x,y)
@@ -317,7 +318,7 @@ levels = {
 			{8,20},{8,30},{8,40},
 			{8,50},{8,60},{8,70}
 		},
-		pass=collectallpass,
+		pass=noenemiespass,
 		createmap = function()
 			for i=3,13 do
 				mset(5,i,16)
