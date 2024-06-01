@@ -311,12 +311,16 @@ enemy = class:new({
 -->8
 -- levels --
 function generatlevel()
+	local crlvl=levels[crrtlv]
 	fires={}
 	enemies={}
-	foreach(levels[crrtlv].enemies, function (e)
+	p.x=crlvl.p.x
+	p.y=crlvl.p.y
+	foreach(crlvl.enemies, function (e)
 		add(enemies,enemy:new({x=e[1],y=e[2]}))
 	end)
-	levels[crrtlv].createmap()
+	reload()	
+	crlvl.createmap()
 end
 
 function passlevel()
@@ -324,10 +328,6 @@ function passlevel()
 		crrtlv+=1
 		nextlv=true
 	end
-end
-
-function generatemap()
-	 reload()	 
 end
 
 function noenemiespass()
@@ -345,6 +345,23 @@ crrtlv=1
 nextlv=true
 levels = {
 	{
+		p={x=20,y=110},
+		enemies={
+			{10,30},{10,40},{10,50},
+			{20,30},{20,40},{30,30},
+			{30,40},{30,50},
+		},
+		pass=noenemiespass,
+		createmap = function()
+			for i=1,14 do
+				mset(5,i,16)
+			end
+			drawbluecircle(1,2)
+			drawbluecircle(3,2)
+		end
+	},
+	{
+		p={x=63,y=63},
 		enemies={
 			{8,20},{8,30},{8,40},
 			{8,50},{8,60},{8,70}
@@ -360,6 +377,7 @@ levels = {
 		end
 	},
 	{
+		p={x=63,y=63},
 		enemies={
 			{8,10}
 		},
