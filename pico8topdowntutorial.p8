@@ -459,7 +459,7 @@ leveld = {
 crrtlv=1
 nextlv=true
 levels = {
-	--levela,levelb,levelc,leveld,	
+	levela,levelb,levelc,leveld,	
 	{
 		p={x=63,y=63},
 		enemies=function()
