@@ -8,7 +8,7 @@ gameovertmr=60
 function resetgame()
 	gameovertmr-=0.5	
 	if gameovertmr<=0 then
-		crrtlv=1
+		crrtlv-=1
 		nextlv=true
 		gameover=false
 		gameovertmr=60
@@ -25,6 +25,7 @@ function _update()
 	end
 	
 	if nextlv then
+	 crrtlv+=1
 		nextlv=false
 		generatlevel()
 	end
@@ -357,7 +358,6 @@ end
 
 function passlevel()
 	if levels[crrtlv].pass() then
-		crrtlv+=1
 		nextlv=true
 	end
 end
@@ -456,7 +456,7 @@ leveld = {
 	end
 }
 
-crrtlv=1
+crrtlv=0
 nextlv=true
 levels = {
 	levela,levelb,levelc,leveld,	
