@@ -385,7 +385,7 @@ levela = {
 	p={x=8,y=8},
 	enemies=function()
 		local ar={}
-		gnrens(2,9,5,6,1,1,ar)
+		gnrens(6,8,3,6,1,1,ar)
 		return ar
 	end,
 	pass=noenemiespass,
@@ -399,12 +399,12 @@ levelb = {
 	p={x=63,y=63},
 	enemies=function()
 		local ar={}
-		gnrens(1,3,3,4,1,1,ar)
+		gnrens(1,7,3,2,1,1,ar)
 		return ar
 	end,
 	pass=noenemiespass,
 	createmap = function()
-		for i=3,14 do
+		for i=5,14 do
 			mset(5,i,16)
 		end
 		for i=1,10 do
@@ -416,12 +416,10 @@ levelb = {
 }
 
 levelc = {
-	p={x=10,y=112},
+	p={x=20,y=112},
 	enemies=function()
 		local ar={}
-		gnrens(1,4,3,2,1,1,ar)
-		add(ar,{9,47})
-		add(ar,{17,47})
+		gnrens(1,4,4,2,1,1,ar)
 		return ar
 	end,
 	pass=noenemiespass,
@@ -461,7 +459,7 @@ leveld = {
 crrtlv=1
 nextlv=true
 levels = {
-	levela,levelb,levelc,leveld,	
+	--levela,levelb,levelc,leveld,	
 	{
 		p={x=63,y=63},
 		enemies=function()
