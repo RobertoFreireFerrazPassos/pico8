@@ -28,6 +28,27 @@ function _draw()
 end
 -->8
 -- utils --
+anim=function(sf,d,t)
+	return {sprt=d,sf=sf,si=1,sl=count(sf),st=t}
+end
+
+updateanimation=function(o)
+	if o==nil 
+	 or o.si==nil
+	 or o.sl==1 then
+	 return o
+	end
+	
+ if o.si<o.sl+0.9 then
+  o.si+=o.st
+ else
+  o.si=1
+ end
+ 
+ o.sprt=o.sf[flr(o.si)] 
+ return o
+end
+	
 getsgn = function(v)
 	return v==0 and 0 or sgn(v)
 end
@@ -81,7 +102,6 @@ diry={ 0,0,-1,1,-0.7,-0.7,0.7, 0.7}
 
 function getxy()
   local a,b,dir=p.x,p.y,butarr[btn()&0b1111]
-
   if lastdir!=dir and dir>=5 then
 	  a=flr(a)+0.5
 	  b=flr(b)+0.5
@@ -90,21 +110,39 @@ function getxy()
 	  a+=dirx[dir]
 	  b+=diry[dir]
   end
-
 	 lastdir=dir
-
-	 return {x=a,y=b}
+	 return {x=a,y=b,dir=dir}
 end
 
 p = class:new({
 	sprt=1,
 	x=63,
 	y=63,
+	dirsprt={
+ 	anim({1,2},1,0.1),
+ 	anim({1,2},1,0.1),
+ 	anim({3,4},3,0.1),
+ 	anim({1,2},1,0.1),
+ 	anim({3,4},3,0.1),
+ 	anim({3,4},3,0.1),
+ 	anim({1,2},1,0.1),
+ 	anim({1,2},1,0.1)
+ },
+ dirf={1,0,0,0,1,0,0,1},
+ fx=false,
+ fy=false,
 	box={x=0,y=0,w=8,h=8},
 	control = function(_ENV)
 		local lx,ly,cex,cey=x,y,false,false
 		local xy=getxy()
 		
+		if xy.dir>0 then
+	  sprt=updateanimation(dirsprt[xy.dir]).sprt
+	  fx=dirf[xy.dir]==1
+  else
+   sprt=1
+  end
+  
 		foreach(enemies, function(e)
 			if rects_overlap({x=xy.x,y=y,box=box},e) then cex=true	end
 			if rects_overlap({x=x,y=xy.y,box=box},e) then cey=true	end
@@ -119,7 +157,7 @@ p = class:new({
 		end
 	end,
 	draw = function(_ENV)
-		spr(sprt,x,y)
+		spr(sprt,x,y,1,1,fx,fy)
 	end
 })
 -->8
