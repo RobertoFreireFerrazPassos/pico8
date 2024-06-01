@@ -256,7 +256,7 @@ end
 function collectallpass()
  local c=0
 	foreach(enemies, function(e)
-		if pointcollideflag(e.x,e.y,2) then
+		if pointcollideflag(e.x+4,e.y+6,2) then
 			c+=1
 		end
 	end)
