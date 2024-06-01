@@ -153,7 +153,9 @@ enemy = class:new({
 		 my=y+4 
 	 	st=2
 		 
-		 for i=1,fov-1 do
+		 local fovc = fov==7 and 4 or 1
+		 
+		 for i=1,fov-fovc do
 		 	mx+=xd
 		 	my+=yd		 	
 		 	if pointcollideflag(mx,my,1) then
@@ -248,8 +250,18 @@ function passlevel()
 end
 
 function generatemap()
-	 reload()
-	 
+	 reload()	 
+end
+
+function collectallpass()
+ local c=0
+	foreach(enemies, function(e)
+		if pointcollideflag(e.x,e.y,2) then
+			c+=1
+		end
+	end)
+	
+	return #enemies == c
 end
 
 crrtlv=1
@@ -257,19 +269,10 @@ nextlv=true
 levels = {
 	{
 		enemies={
-			{8,10},{8,20},{8,30},{8,40},
-			{8,50},{8,60},{8,70},{8,80}
+			{8,20},{8,30},{8,40},
+			{8,50},{8,60},{8,70}
 		},
-		pass=function()
-			local c=0
-			foreach(enemies, function(e)
-				if pointcollideflag(e.x,e.y,2) then
-					c+=1
-				end
-			end)
-			
-			return #enemies == c
-		end,
+		pass=collectallpass,
 		createmap = function()
 			for i=3,13 do
 				mset(5,i,16)
