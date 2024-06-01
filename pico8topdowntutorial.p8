@@ -264,6 +264,13 @@ function collectallpass()
 	return #enemies == c
 end
 
+function drawbluecircle(x,y)
+		mset(x,y,17)
+		mset(x,y+1,33)
+		mset(x+1,y,18)
+		mset(x+1,y+1,34)
+end
+
 crrtlv=1
 nextlv=true
 levels = {
@@ -278,18 +285,8 @@ levels = {
 				mset(5,i,16)
 				mset(10,i,16)
 			end
-			for i=5,10,2 do
-				mset(11,i,17)
-				mset(12,i,18)
-				mset(13,i,17)
-				mset(14,i,18)
-			end
-			for i=6,10,2 do
-				mset(11,i,33)
-				mset(12,i,34)
-				mset(13,i,33)
-				mset(14,i,34)
-			end
+			drawbluecircle(11,5)
+			drawbluecircle(13,5)
 		end
 	},
 	{
