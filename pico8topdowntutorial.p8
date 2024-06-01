@@ -348,7 +348,7 @@ function generatlevel()
 	enemies={}
 	p.x=crlvl.p.x
 	p.y=crlvl.p.y
-	foreach(crlvl.enemies, function (e)
+	foreach(crlvl.enemies(), function (e)
 		add(enemies,enemy:new({x=e[1],y=e[2]}))
 	end)
 	reload()	
@@ -373,72 +373,100 @@ function drawbluecircle(x,y)
 		mset(x+1,y+1,34)
 end
 
+function gnrens(i,j,w,h,k,l,ar)
+	for n=0,w-1,k do
+		for m=0,h-1,l do
+			add(ar,{(i+n)*10,(j+m)*10})
+		end
+	end
+end
+
+levela = {
+	p={x=8,y=8},
+	enemies=function()
+		local ar={}
+		gnrens(4,7,3,3,1,1,ar)
+		return ar
+	end,
+	pass=noenemiespass,
+	createmap = function()
+		drawbluecircle(5,2)
+		drawbluecircle(7,2)
+	end
+}
+
+levelb = {
+	p={x=10,y=110},
+	enemies=function()
+		local ar={}
+		gnrens(1,3,3,2,1,1,ar)
+		add(ar,{10,50})
+		add(ar,{20,50})
+		return ar
+	end,
+	pass=noenemiespass,
+	createmap = function()
+		for i=1,14 do
+			mset(5,i,16)
+		end
+		drawbluecircle(1,2)
+		drawbluecircle(3,2)
+	end
+}
+
+levelc = {
+	p={x=63,y=63},
+	enemies=function()
+		local ar={}
+		gnrens(1,3,3,3,1,1,ar)
+		return ar
+	end,
+	pass=noenemiespass,
+	createmap = function()
+		for i=3,13 do
+			mset(5,i,16)
+			mset(10,i,16)
+		end
+		drawbluecircle(11,5)
+		drawbluecircle(13,5)
+	end
+}
+
+leveld = {
+	p={x=8,y=8},
+	enemies=function()
+		local ar={}
+		gnrens(4,10,7,2,1,1,ar)
+		gnrens(10,5,2,4,1,2,ar)
+		return ar
+	end,
+	pass=noenemiespass,
+	createmap = function()
+	 for i=1,10 do
+			mset(6,i,16)
+		end
+		for i=6,10 do
+			mset(11,i,16)
+		end
+		for i=6,11 do
+			mset(i,11,16)
+		end
+		drawbluecircle(7,8)
+		drawbluecircle(9,8)
+	end
+}
+
 crrtlv=1
 nextlv=true
 levels = {
- {
-		p={x=8,y=8},
-		enemies={
-			{40,70},{40,80},{40,90},
-			{50,70},{50,80},{50,90},
-			{60,70},{60,80},{60,90}
-		},
-		pass=noenemiespass,
-		createmap = function()
-			drawbluecircle(5,2)
-			drawbluecircle(7,2)
-		end
-	},
-	{
-		p={x=8,y=8},
-		enemies={
-			{40,70},{40,80},{40,90},
-			{50,70},{50,80},{50,90},
-			{60,70},{60,80},{60,90}
-		},
-		pass=noenemiespass,
-		createmap = function()
-			drawbluecircle(5,2)
-			drawbluecircle(7,2)
-		end
-	},
-	{
-		p={x=20,y=110},
-		enemies={
-			{10,30},{10,40},{10,50},
-			{20,30},{20,40},{30,30},
-			{30,40},{30,50},
-		},
-		pass=noenemiespass,
-		createmap = function()
-			for i=1,14 do
-				mset(5,i,16)
-			end
-			drawbluecircle(1,2)
-			drawbluecircle(3,2)
-		end
-	},
+	levela,levelb,levelc,leveld,
 	{
 		p={x=63,y=63},
-		enemies={
-			{8,20},{8,30},{8,40},
-			{8,50},{8,60},{8,70}
-		},
-		pass=noenemiespass,
-		createmap = function()
-			for i=3,13 do
-				mset(5,i,16)
-				mset(10,i,16)
-			end
-			drawbluecircle(11,5)
-			drawbluecircle(13,5)
-		end
-	},
-	{
-		p={x=63,y=63},
-		enemies={
-			{8,10}
-		},
+		enemies=function()
+			local ar={}
+			gnrens(1,1,1,1,1,1,ar)
+			return ar
+		end,
 		pass=function(enemies)
 		end,
 		createmap = function()
