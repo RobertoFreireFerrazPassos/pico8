@@ -376,7 +376,7 @@ end
 function gnrens(i,j,w,h,k,l,ar)
 	for n=0,w-1,k do
 		for m=0,h-1,l do
-			add(ar,{(i+n)*10,(j+m)*10})
+			add(ar,{(i+n)*8+1,(j+m)*8+1})
 		end
 	end
 end
@@ -385,23 +385,43 @@ levela = {
 	p={x=8,y=8},
 	enemies=function()
 		local ar={}
-		gnrens(4,7,3,3,1,1,ar)
+		gnrens(2,9,5,6,1,1,ar)
 		return ar
 	end,
 	pass=noenemiespass,
 	createmap = function()
-		drawbluecircle(5,2)
-		drawbluecircle(7,2)
+		drawbluecircle(10,11)
+		drawbluecircle(12,11)
 	end
 }
 
 levelb = {
-	p={x=10,y=110},
+	p={x=63,y=63},
 	enemies=function()
 		local ar={}
-		gnrens(1,3,3,2,1,1,ar)
-		add(ar,{10,50})
-		add(ar,{20,50})
+		gnrens(1,3,3,4,1,1,ar)
+		return ar
+	end,
+	pass=noenemiespass,
+	createmap = function()
+		for i=3,14 do
+			mset(5,i,16)
+		end
+		for i=1,10 do
+			mset(10,i,16)
+		end
+		drawbluecircle(11,5)
+		drawbluecircle(13,5)
+	end
+}
+
+levelc = {
+	p={x=10,y=112},
+	enemies=function()
+		local ar={}
+		gnrens(1,4,3,2,1,1,ar)
+		add(ar,{9,47})
+		add(ar,{17,47})
 		return ar
 	end,
 	pass=noenemiespass,
@@ -414,30 +434,12 @@ levelb = {
 	end
 }
 
-levelc = {
-	p={x=63,y=63},
-	enemies=function()
-		local ar={}
-		gnrens(1,3,3,3,1,1,ar)
-		return ar
-	end,
-	pass=noenemiespass,
-	createmap = function()
-		for i=3,13 do
-			mset(5,i,16)
-			mset(10,i,16)
-		end
-		drawbluecircle(11,5)
-		drawbluecircle(13,5)
-	end
-}
-
 leveld = {
 	p={x=8,y=8},
 	enemies=function()
 		local ar={}
-		gnrens(4,10,7,2,1,1,ar)
-		gnrens(10,5,2,4,1,2,ar)
+		gnrens(6,12,7,3,1,1,ar)
+		gnrens(12,5,2,6,1,3,ar)
 		return ar
 	end,
 	pass=noenemiespass,
@@ -459,7 +461,7 @@ leveld = {
 crrtlv=1
 nextlv=true
 levels = {
-	levela,levelb,levelc,leveld,
+	levela,levelb,levelc,leveld,	
 	{
 		p={x=63,y=63},
 		enemies=function()
