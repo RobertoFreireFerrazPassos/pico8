@@ -89,7 +89,7 @@ end
 flgmtch=function(t, fs)
   local tf = fget(t)
   for f in all(fs) do
-    if (tf & f) != 0 then
+    if tf==f then
       return true
     end
   end
@@ -503,13 +503,6 @@ end
 crrtlv=0
 nextlv=true
 levels = {
- {
-		{60,112},
-		{{1,4,2,4,1,1},{12,4,2,3,1,1},{13,7,2,2,1,1}},
-		{{1,2},{12,2}},
-		{{0,1,13,3},{1,4,10,13},{0,1,13,11}},
-		{{3,14,5,14}}
-	},
  {
 		{8,8},
 		{{6,8,3,6,1,1}},
