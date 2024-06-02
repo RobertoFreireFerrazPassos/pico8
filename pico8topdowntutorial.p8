@@ -6,7 +6,7 @@ gameover=false
 gameovertmr=30
 
 function resetgame()
-	gameovertmr-=0.5	
+	gameovertmr-=1	
 	if gameovertmr<=0 then
 		crrtlv-=1
 		nextlv=true
@@ -43,6 +43,7 @@ function _draw()
 	cls()
 	map()
 	if gameover then
+		reload()
 		print("you died",40,63,8)
 		return
 	end
