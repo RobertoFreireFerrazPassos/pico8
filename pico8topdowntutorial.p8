@@ -232,12 +232,12 @@ p = class:new({
 	end,
 	draw = function(_ENV)
 		spr(sprt,x,y,1,1,fx,fy)
-		spr(getptnsprt(),0,0)
 		printpotion()
 	end
 })
 
 function printpotion()
+ spr(getptnsprt(),0,0)
 	local txt,clr=flr(ptntmr),10
 		
 	if ptntmr<=0 then
@@ -282,7 +282,7 @@ enemy = class:new({
 		spd=0.4, -- speed
 		st=0,-- 0- far 1-wall  2-find
 		box={x=2,y=4,w=5,h=3},
-		fov={{7,4},{3,1},{2,0}},--field of view number of sprites
+		fov={{6,3},{3,1},{2,0}},--field of view number of sprites
 		findplayer = function(_ENV)
 			if global.ptntmr>0 then
 				return
@@ -401,13 +401,13 @@ enemy = class:new({
 -->8
 -- levels --
 function generatlevel()
-	local crlvl=levels[crrtlv]
+	crlvl=crtlvl(levels[crrtlv])
 	p.potion=0--reset potion
 	fires={}
 	enemies={}
 	p.x=crlvl.p.x
 	p.y=crlvl.p.y
-	foreach(crlvl.enemies(), function (e)
+	foreach(crlvl.enemies, function (e)
 		add(enemies,enemy:new({x=e[1],y=e[2]}))
 	end)
 	reload()	
@@ -415,20 +415,13 @@ function generatlevel()
 end
 
 function passlevel()
-	if levels[crrtlv].pass() then
+	if crlvl.pass() then
 		nextlv=true
 	end
 end
 
 function noenemiespass()
 	return #enemies == 0
-end
-
-function drawbluecircle(x,y)
-		mset(x,y,17)
-		mset(x,y+1,33)
-		mset(x+1,y,18)
-		mset(x+1,y+1,34)
 end
 
 function gnrens(i,j,w,h,k,l,ar)
@@ -439,97 +432,84 @@ function gnrens(i,j,w,h,k,l,ar)
 	end
 end
 
+--create level
+crtlvl=function(lv)
+	local lo={}
+	lo.p={x=lv[1][1],y=lv[1][2]}
+	local ar={}
+	foreach(lv[2],function (e)		
+		gnrens(e[1],e[2],e[3],e[4],e[5],e[6],ar)		
+	end)
+	lo.enemies=ar
+	lo.pass=noenemiespass
+	lo.createmap=function()
+		foreach(lv[3],function (b)
+			mset(b[1],b[2],17)
+			mset(b[1],b[2]+1,33)
+			mset(b[1]+1,b[2],18)
+			mset(b[1]+1,b[2]+1,34)
+		end)
+		
+		if lv[4]==nil then return end
+		
+		foreach(lv[4],function (c)		
+			if c[1]==0 then
+				for i=c[2],c[3] do
+					mset(c[4],i,16)
+				end
+			else
+			 for i=c[2],c[3] do
+					mset(i,c[4],16)
+				end
+			end
+		end)
+	end
+	return lo
+end
+
 levela = {
-	p={x=8,y=8},
-	enemies=function()
-		local ar={}
-		gnrens(6,8,3,6,1,1,ar)
-		return ar
-	end,
-	pass=noenemiespass,
-	createmap = function()
-		drawbluecircle(10,11)
-		drawbluecircle(12,11)
-	end
+	{8,8},
+	{{6,8,3,6,1,1}},
+	{{10,11},{12,11}}
 }
-
 levelb = {
-	p={x=63,y=63},
-	enemies=function()
-		local ar={}
-		gnrens(1,7,3,2,1,1,ar)
-		return ar
-	end,
-	pass=noenemiespass,
-	createmap = function()
-		for i=5,14 do
-			mset(5,i,16)
-		end
-		for i=1,10 do
-			mset(10,i,16)
-		end
-		drawbluecircle(11,5)
-		drawbluecircle(13,5)
-	end
+	{63,63},
+	{{1,7,3,2,1,1}},
+	{{11,5},{13,5}},
+	{{0,5,14,5},{0,1,10,10}}
 }
-
 levelc = {
-	p={x=20,y=112},
-	enemies=function()
-		local ar={}
-		gnrens(1,4,4,2,1,1,ar)
-		return ar
-	end,
-	pass=noenemiespass,
-	createmap = function()
-		for i=1,14 do
-			mset(5,i,16)
-		end
-		drawbluecircle(1,2)
-		drawbluecircle(3,2)
-	end
+	{20,112},
+	{{1,4,4,2,1,1}},
+	{{1,2},{3,2}},
+	{{0,1,14,5}}
+}
+leveld = {
+ {80,100},
+ {{12,5,2,6,1,3}},
+ {{7,8},{9,8}},
+ {{0,1,10,6},{0,6,10,11},{1,6,11,11}}
+}
+levele = {
+	{8,8},
+	{{6,12,7,3,1,1},{12,5,2,6,1,3}},
+	{{7,8},{9,8}},
+	{{0,1,10,6},{0,6,10,11},{1,6,11,11}}
 }
 
-leveld = {
-	p={x=8,y=8},
-	enemies=function()
-		local ar={}
-		gnrens(6,12,7,3,1,1,ar)
-		gnrens(12,5,2,6,1,3,ar)
-		return ar
-	end,
-	pass=noenemiespass,
-	createmap = function()
-	 for i=1,10 do
-			mset(6,i,16)
-		end
-		for i=6,10 do
-			mset(11,i,16)
-		end
-		for i=6,11 do
-			mset(i,11,16)
-		end
-		drawbluecircle(7,8)
-		drawbluecircle(9,8)
-	end
+levelf = {
+	{63,63},
+	{{1,1,1,1,1,1}},
+	{},
+	{}
 }
 
 crrtlv=0
 nextlv=true
 levels = {
-	levela,levelb,levelc,leveld,	
-	{
-		p={x=63,y=63},
-		enemies=function()
-			local ar={}
-			gnrens(1,1,1,1,1,1,ar)
-			return ar
-		end,
-		pass=function(enemies)
-		end,
-		createmap = function()
-		end
-	}
+	levela,levelb,levelc,
+	leveld,leveld,levele,
+	levelf	
 }
 __gfx__
 000000000dddddd0000000000dddddd0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -541,8 +521,8 @@ __gfx__
 00000000fd7787dffd7787dffddddddffddddddf0200002002000200002000200000000000000000000000000000000000000000000000000000000000000000
 000000000dddddd00dddddd00dddddd00dddddd00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000cccccc0000000000000000440000004400000044000000440000004400000044000000000000000000000000000000000000000000000000000
-66666660000ccc0000ccc00000000000006006000060060000600600006006000060060000688600000000000000000000000000000000000000000000000000
-6666666000cc0c0000c0cc0000000000006006000060060000600600006006000068860000688600000000000000000000000000000000000000000000000000
+55555550000ccc0000ccc00000000000006006000060060000600600006006000060060000688600000000000000000000000000000000000000000000000000
+5555555000cc0c0000c0cc0000000000006006000060060000600600006006000068860000688600000000000000000000000000000000000000000000000000
 0000000000cc00c00c00cc0000000000000660000006600000066000000660000006600000066000000000000000000000000000000000000000000000000000
 550550500c0c00cccc00c0c000000000006076000060760000607600006876000068760000687600000000000000000000000000000000000000000000000000
 000000000c00c000000c00c000000000060007600600076006888760068887600688876006888760000000000000000000000000000000000000000000000000
