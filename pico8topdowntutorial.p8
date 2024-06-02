@@ -87,9 +87,8 @@ pointcollideflag=function(x,y,flag)
 end
 
 flgmtch=function(t, fs)
-  local tf = fget(t)
   for f in all(fs) do
-    if tf==f then
+    if fget(t,f) then
       return true
     end
   end
@@ -231,19 +230,19 @@ p = class:new({
 			return
 		end
 		
-		if cex==false and collideflag(xy.x,y,box,{1})==false then
+		if cex==false and collideflag(xy.x,y,box,{0})==false then
 			x=xy.x -- no collsion in x
 		end
 		
-		if cey==false and collideflag(x,xy.y,box,{1})==false then
+		if cey==false and collideflag(x,xy.y,box,{0})==false then
 			y=xy.y -- no collsion in y
 		end
 		
-		if collideflag(x,y,box,{4}) then
+		if collideflag(x,y,box,{2}) then
 			local ix,cdv=0,crlvl.dinval
 			for i=1,#cdv do
-			 if abs(cdv[i][1]*8-x)<7 and
-			 	 abs(cdv[i][2]*8-y)<7 then
+			 if abs(cdv[i][1]*8-x)<2 and
+			 	 abs(cdv[i][2]*8-y)<2 then
 				 ix=i
 				 break
 			 end
@@ -359,7 +358,7 @@ enemy = class:new({
 				xyc.x=x+xsd*2--2 must be > spd for collision detection
 			 
 			 -- try to go around wall
-				if collideflag(xy.x,y,box,{1}) then
+				if collideflag(xy.x,y,box,{0}) then
 					xy.x=x
 				 xyc.x=x
 					xy.y=y+ysd*spd
@@ -370,7 +369,7 @@ enemy = class:new({
 			 xyc.y=y+ysd*2
 			 
 			 -- try to go around wall
-			 if collideflag(x,xy.y,box,{1}) then
+			 if collideflag(x,xy.y,box,{0}) then
 					xy.y=y
 			  xyc.y=y
 					xy.x=x+xsd*spd
@@ -385,12 +384,12 @@ enemy = class:new({
 				end				
 			end)
 			
-			if cex==false and collideflag(xy.x,y,box,{1,8})==false then
+			if cex==false and collideflag(xy.x,y,box,{0,3})==false then
 				x=xy.x -- no collsion in x
 				didmv=true
 			end
 			
-			if cey==false and collideflag(x,xy.y,box,{1,8})==false then
+			if cey==false and collideflag(x,xy.y,box,{0,3})==false then
 				y=xy.y -- no collsion in y
 				didmv=true
 			end
@@ -399,7 +398,7 @@ enemy = class:new({
 				sprt=updateanimation(anmspt).sprt
 			end
 			
-			if collideflag(x,y,box,{2}) then
+			if collideflag(x,y,box,{1}) then
 				add(fires,fire:new({x=x,y=y}))
 				del(enemies,_ENV)
 				p.potion+=1
@@ -503,7 +502,13 @@ end
 crrtlv=0
 nextlv=true
 levels = {
- {
+	{
+		{40,110},
+		{{1,7,2,3,1,1}},
+		{{1,11}},
+		{{0,2,14,3},{0,2,14,4},{0,1,14,6}},
+		{{3,8,4,8}}
+	},{
 		{8,8},
 		{{6,8,3,6,1,1}},
 		{{10,11},{12,11}}
@@ -565,7 +570,7 @@ __gfx__
 02222220000ccc0000ccc00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000cccccc0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __gff__
-0000000000000000000000000000000001020208000000000000000000000000040202000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000010202080000000000000000000000000c0202000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __map__
 0010101010101010101010101010100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
