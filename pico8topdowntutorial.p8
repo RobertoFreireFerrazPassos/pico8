@@ -16,6 +16,7 @@ function resetgame()
 end
 
 function _init()
+ menuitem(1, "restart", function() crrtlv-=1 nextlv=true end)
 end
 
 function _update()
