@@ -133,6 +133,7 @@ function rects_overlap(o1,o2)
          o1y + o1.box.h - 1 > o2y
 end
 
+--dinamic reference values needs to set everytime
 class = setmetatable({
 		new=function(self,tbl)
 			tbl = tbl or {}
@@ -296,7 +297,7 @@ end
 -- fire --
 fire = class:new({
 	sprt=8,
-	anmspt=anim({8,9,10,11,12},8,0.1),
+	anmspt={},
 	x=0,
 	y=0,
 	tmr=60,
@@ -315,7 +316,7 @@ fire = class:new({
 -- enemy --
 enemy = class:new({
 		sprt=5,
-		anmspt=anim({5,6,7},5,0.2),
+		anmspt={},
 		x=0,
 		y=0,
 		xd=0,-- step x 0 upto 8
@@ -419,7 +420,7 @@ enemy = class:new({
 			end
 			
 			if collideflag(x,y,box,{1}) then
-				add(fires,fire:new({x=x,y=y}))
+				add(fires,fire:new({x=x,y=y,anmspt=anim({8,9,10,11,12},8,0.1)}))
 				del(enemies,_ENV)
 				p.potion+=1
 			end
@@ -443,10 +444,10 @@ enemy = class:new({
 		end
 })
 
-enemyfire = class:new({
+enemyfire=class:new({
 	sprt=35,
 	inactive=true,
-	anmspt=anim({35,36,37,38,39},35,0.1),
+	anmspt={},
 	x=0,
 	y=0,
 	ax=0,
@@ -481,10 +482,15 @@ function generatlevel()
 	p.x=crlvl.p.x
 	p.y=crlvl.p.y
 	foreach(crlvl.enemies, function (e)
-		add(enemies,enemy:new({x=e[1],y=e[2]}))
+		add(enemies,enemy:new({x=e[1],y=e[2],anmspt=anim({5,6,7},5,0.2)}))
 	end)
 	foreach(crlvl.eneyfires, function (ef)
-		add(enemyfires,enemyfire:new({x=ef[3]*8,y=ef[4]*8,ax=ef[1]*8,ay=ef[2]*8}))
+		add(enemyfires,enemyfire:new(
+				{	x=ef[3]*8,y=ef[4]*8,
+					ax=ef[1]*8,ay=ef[2]*8,
+					anmspt=anim({35,36,37,38,39},35,0.1)
+				})
+			)
 	end)	
 	reload()	
 	crlvl.createmap()
@@ -509,7 +515,7 @@ function levellogic()
 				local nes={}
 				gnrens(e[1],e[2],e[3],e[4],e[5],e[6],nes)
 				foreach(nes, function (ne)
-					add(enemies,enemy:new({x=ne[1],y=ne[2]}))
+					add(enemies,enemy:new({x=ne[1],y=ne[2],anmspt=anim({5,6,7},5,0.2)}))
 				end)
 				del(enemyholes,e)
 			end
