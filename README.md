@@ -9,6 +9,8 @@ export {name}.p8.png. ex: priestvsdemons.p8.png
 
 https://www.lexaloffle.com/pico-8.php?page=submit
 
+https://www.lexaloffle.com/bbs/?tid=142633
+
 ## References:
 
 [Lua for pico 8](https://pico-8.fandom.com/wiki/Lua)
