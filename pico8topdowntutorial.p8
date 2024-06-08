@@ -3,6 +3,7 @@ version 41
 __lua__
 global=_ENV
 finish=false
+restart=false
 gameover=false
 gameovertmr=30
 
@@ -16,12 +17,24 @@ function resetgame()
 	end
 end
 
+function restartlevel()
+	crrtlv-=1 
+ nextlv=true 
+end
+
 function _init()
- menuitem(1, "restart", function() crrtlv-=1 nextlv=true end)
- menuitem(2, "next", function() nextlv=true end)
+ menuitem(1, "restart", function() 
+ 	restart=true
+ end)
 end
 
 function _update()
+ if restart then
+ 	restartlevel()
+ end
+ 
+ restart=false
+ 
 	if gameover then
 	 resetgame()
 		return
