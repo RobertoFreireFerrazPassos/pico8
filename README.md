@@ -1,6 +1,14 @@
 # pico8
 
 
+## Submit game
+
+control + 7 to take picture
+
+export {name}.p8.png
+
+https://www.lexaloffle.com/pico-8.php?page=submit
+
 ## References:
 
 [Lua for pico 8](https://pico-8.fandom.com/wiki/Lua)
