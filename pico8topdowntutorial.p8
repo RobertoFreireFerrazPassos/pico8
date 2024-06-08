@@ -23,7 +23,7 @@ function restartlevel()
 end
 
 function _init()
- menuitem(1, "restart", function() 
+ menuitem(1, "restart level", function() 
  	restart=true
  end)
 end
@@ -40,7 +40,7 @@ function _update()
 		return
 	end
 	
-	if crrtlv == 25 then
+	if crrtlv == 27 then
 	 finish=true
 		return
 	end
@@ -50,6 +50,13 @@ function _update()
 		nextlv=false
 		generatlevel()
 	end
+	
+	if crlvl != nil and crlvl.text != nil and
+		texttmr>=0 then
+	 texttmr-=1
+	 return
+	end
+	
 	foreach(enemies, function(e)
 		e:control()
 	end)
@@ -76,6 +83,11 @@ function _draw()
 		reload()
 		print("congratulations",35,63,10)
 		return
+	end
+	
+	if crlvl != nil and crlvl.text != nil and
+		texttmr>=0 then
+		printtxt()
 	end
 	
 	p:draw()
@@ -334,6 +346,18 @@ function printpotion()
 	
 	print(txt,120,0,clr)	
 end
+
+function printtxt()
+ for i=2,#crlvl.text do
+		 local sprttxt = sub(crlvl.text[i],1,4)
+		 
+		 if sprttxt == "sprt" then
+		 	spr(sub(crlvl.text[i],5,6),40,(i-1)*8)
+		 else
+				print(crlvl.text[i],40,(i-1)*8,10)
+	 	end
+	 end
+end
 -->8
 -- fire --
 fire = class:new({
@@ -515,6 +539,7 @@ enemyfire=class:new({
 -- levels --
 function generatlevel()
 	crlvl=crtlvl(levels[crrtlv])
+	texttmr=crlvl.text[1] or 0
 	p.potion=0--reset potion
 	fires={}
 	enemies={}
@@ -541,7 +566,7 @@ function generatlevel()
 	crlvl.createmap()
 end
 
-function levellogic()
+function levellogic()	
 	if crlvl.pass() then
 		nextlv=true
 		return
@@ -600,6 +625,7 @@ crtlvl=function(lv)
 	lo.enemies=ar
 	lo.eneyfires=lv[6] or {}
 	lo.enemyeggs=lv[7] or {}
+	lo.text=lv[9] or {}
 	lo.pass=noenemiespass
 	lo.createmap=function()
 		foreach(lv[3],function (b)
@@ -655,16 +681,57 @@ end
 crrtlv=0
 nextlv=true
 levels = {
-	{
+ {
+		{8,8},
+		{},
+		{{1,13}},
+		{},
+		{},
+		{},
+		{{1,8,2,2,1,1,20,0}},
+		{},
+		{
+			120,
+			"priest,",
+			"help me kill all",
+			"these little demons!",
+			"bring them to the",
+			"blue circle"
+		}	
+	},{
 		{8,8},
 		{
-			{3,8,3,4,1,1}
+			{1,8,14,2,1,1}
 		},
-		{{6,6}},
-		{},
-		{},
-		{},
-		{{4,4,2,2,1,1,40,0}}
+		{{6,11}},
+		{},{},{},
+		{},{},
+		{
+			120,
+			"press start if you",
+			"need to restart level"
+		}	
+	},{
+		{8,8},
+		{
+			{1,7,2,5,1,1},
+			{6,13,3,2,1,1},
+			{9,14,3,1,1,1}
+		},
+		{{1,1},{12,13}},
+		{
+			{0,1,11,3},
+			{1,2,14,12}
+		},
+		{{1,13,1,12}},
+		{},{},{},
+		{
+		 120,
+			"if potion full",
+			"sprt25",
+			"press ❎ to be",
+			"invisible to enemies"
+		}		
 	},{
 		{8,110},
 		{
