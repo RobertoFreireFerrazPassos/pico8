@@ -2,6 +2,7 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 global=_ENV
+finish=false
 gameover=false
 gameovertmr=30
 
@@ -23,6 +24,11 @@ end
 function _update()
 	if gameover then
 	 resetgame()
+		return
+	end
+	
+	if crrtlv == 25 then
+	 finish=true
 		return
 	end
 	
@@ -50,6 +56,12 @@ function _draw()
 	if gameover then
 		reload()
 		print("you died",40,63,8)
+		return
+	end
+	
+	if finish then
+		reload()
+		print("congratulations",35,63,10)
 		return
 	end
 	
