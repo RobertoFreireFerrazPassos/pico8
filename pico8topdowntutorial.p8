@@ -308,7 +308,16 @@ p = class:new({
 		end
 	end,
 	draw = function(_ENV)
+		if clde==false then
+			pal(4,0)
+			pal(15,1)
+			pal(2,1)
+			pal(9,1)
+			pal(10,1)
+			pal(7,0)
+		end
 		spr(sprt,x,y,1,1,fx,fy)
+		pal()
 		printpotion()
 	end
 })
