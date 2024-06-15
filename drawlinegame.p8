@@ -2,68 +2,61 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 -- constants
-trail_lifetime = 120  -- lifetime of the trail in frames (e.g., 120 frames)
+trail_lifetime = 120
 
--- initialize the game state
+function getnewtrail()
+	return {color = 0, timestamp = 0}
+end
+
 function _init()
-    -- sprite position
-    player_x = 64
-    player_y = 64
+ p = {
+		x = 64,
+		y = 64
+	}
+	
+ trail_color = 7
 
-    -- trail color (7 is white)
-    trail_color = 7
+ screen_buffer = {}
+ for i=0,127 do
+   screen_buffer[i] = {}
+   for j=0,127 do
+    screen_buffer[i][j] = getnewtrail()
+   end
+ end
 
-    -- screen buffer to keep track of painted pixels and their timestamps
-    screen_buffer = {}
-    for i=0,127 do
-        screen_buffer[i] = {}
-        for j=0,127 do
-            screen_buffer[i][j] = {color = 0, timestamp = 0}
-        end
-    end
-
-    -- frame counter
-    frame_count = 0
+ frame_count = 0
 end
 
--- update the game state
 function _update()
-    -- increment frame counter
-    frame_count += 1
-
-    -- move the player based on input
-    if btn(0) then player_x = max(player_x - 1, 0) end -- left
-    if btn(1) then player_x = min(player_x + 1, 127) end -- right
-    if btn(2) then player_y = max(player_y - 1, 0) end -- up
-    if btn(3) then player_y = min(player_y + 1, 127) end -- down
-
-    -- paint the current position
-    screen_buffer[player_x][player_y] = {color = trail_color, timestamp = frame_count}
+	frame_count += 1
+	
+	if btn(0) then p.x = max(p.x - 1, 0) end -- left
+	if btn(1) then p.x = min(p.x + 1, 127) end -- right
+	if btn(2) then p.y = max(p.y - 1, 0) end -- up
+	if btn(3) then p.y = min(p.y + 1, 127) end -- down
+	
+	screen_buffer[p.x+4][p.y+4] = {color = trail_color, timestamp = frame_count}
 end
 
--- draw the game
 function _draw()
-    -- clear the screen
-    cls()
-
-    -- draw the painted trail from the buffer
-    for i=0,127 do
-        for j=0,127 do
-            local cell = screen_buffer[i][j]
-            if cell.color ~= 0 then
-                -- check if the trail should still be visible
-                if frame_count - cell.timestamp < trail_lifetime then
-                    pset(i, j, cell.color)
-                else
-                    -- clear the cell if the trail has expired
-                    screen_buffer[i][j] = {color = 0, timestamp = 0}
-                end
-            end
-        end
-    end
-
-    -- draw the player sprite
-    spr(1, player_x, player_y)
+	cls()
+	
+	for i=0,127 do
+	 for j=0,127 do
+	  local cell = screen_buffer[i][j]
+	  if cell.color ~= 0 then
+	   -- check if the trail should still be visible
+	   if frame_count - cell.timestamp < trail_lifetime then
+	    pset(i, j, cell.color)
+	   else
+     -- clear the cell if the trail has expired
+     screen_buffer[i][j] = getnewtrail()
+	   end
+	  end
+	 end
+	end
+	
+	spr(1,p.x,p.y)
 end
 __gfx__
 00000000555555550000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
