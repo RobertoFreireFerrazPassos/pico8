@@ -99,9 +99,9 @@ s = class:new({
 	tpi=1,--towertype index
 	move=function(_ENV)
 		if btn(0) then x=max(x - 8, 0) -- left
-		elseif btn(1) then x=min(x + 8, 95) -- right
+		elseif btn(1) then x=min(x + 8, 96) -- right
 		elseif btn(2) then y=max(y - 8, 0) -- up
-		elseif btn(3) then y=min(y + 8, 119) end -- down
+		elseif btn(3) then y=min(y + 8, 112) end -- down
 	end,
 	control=function(_ENV)
 		if not hm and (btn(0) or btn(1) or btn(2) or btn(3)) then
