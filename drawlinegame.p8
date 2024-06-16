@@ -1,35 +1,14 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
-trail_lifetime = 120
-trail_max_length = 50
-
-function getnewtrail()
-	return {color = 0, timestamp = 0}
-end
-
-function create_screen_buffer()
-	scbfr = {}
- for i=0,127 do
-   scbfr[i] = {}
-   for j=0,127 do
-    scbfr[i][j] = getnewtrail()
-   end
- end
-end
-
 function _init()
  p = {
 		x = 64,
 		y = 64
-	}
-	
+	}	
  trail_color = 7
-
  create_screen_buffer()
-
- frame_count = 0
- 
+ frame_count = 0 
  trail_history = {}
 end
 
@@ -37,9 +16,9 @@ function _update()
 	frame_count += 1
 	
 	if btn(0) then p.x = max(p.x - 1, 0) end -- left
-	if btn(1) then p.x = min(p.x + 1, 127) end -- right
+	if btn(1) then p.x = min(p.x + 1, 120) end -- right
 	if btn(2) then p.y = max(p.y - 1, 0) end -- up
-	if btn(3) then p.y = min(p.y + 1, 127) end -- down
+	if btn(3) then p.y = min(p.y + 1, 120) end -- down
 	
 	scbfr[p.x+4][p.y+4] = {color = trail_color, timestamp = frame_count}
 
@@ -70,6 +49,35 @@ function _draw()
 	end
 	
 	spr(1,p.x,p.y)
+	print((p.x+4).." "..(p.y+4))
+	print(trail_history[1].x.." "..trail_history[1].y)
+	if trail_history[2]~=nil then
+		print(trail_history[2].x.." "..trail_history[2].y)
+	end
+	if trail_history[50]~=nil then
+		print(trail_history[50].x.." "..trail_history[50].y)
+	end	
+	if trail_history[120]~=nil then
+		print(trail_history[120].x.." "..trail_history[120].y)
+	end
+	print(#trail_history)
+end
+-->8
+trail_lifetime = 120
+trail_max_length = 120
+
+function getnewtrail()
+	return {color = 0, timestamp = 0}
+end
+
+function create_screen_buffer()
+	scbfr = {}
+ for i=0,127 do
+   scbfr[i] = {}
+   for j=0,127 do
+    scbfr[i][j] = getnewtrail()
+   end
+ end
 end
 __gfx__
 00000000555555550000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
