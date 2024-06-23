@@ -120,9 +120,11 @@ s = class:new({
 			timemanager:addtimer(5,function() s.hm=false end,1)
 		end
 		
-		if not at and btn(4) then
+		if not at and btn(4) and
+				availabletowers[tpi].q>0 then
 			add(towers,t:new({x=x,y=y,s=towertypes[tpi].s}))
 			at=true
+			availabletowers[tpi].q-=1
 			timemanager:addtimer(15,function() s.at=false end,1)
 		end
 		
