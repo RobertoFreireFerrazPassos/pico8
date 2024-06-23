@@ -5,7 +5,7 @@ function _init()
  generateavailabletowers(
  	{2,2,2,1}
  )
- create_towers_buffer()
+ create_buffer()
 	generateenemies()
 end
 
@@ -132,7 +132,7 @@ s = class:new({
 			and	availabletowers[tpi].q>0 
 			and not tv(x,y) then
 				add(towers,t:new({x=x,y=y,s=towertypes[tpi].s}))
-				global.towers_buffer[flr(x/8)][flr(y/8)]=true
+				global.buffer[flr(x/8)][flr(y/8)]=true
 				at=true
 				availabletowers[tpi].q-=1
 				timemanager:addtimer(15,function() s.at=false end,1)
@@ -154,17 +154,6 @@ s = class:new({
 
 -->8
 -- tower --
-towers_buffer={}
-
-function create_towers_buffer()
- for i=0,15 do
-   towers_buffer[i] = {}
-   for j=0,15 do
-    towers_buffer[i][j]=false
-   end
- end
-end
-
 availabletowers = {}
 
 function generateavailabletowers(ql)
@@ -212,7 +201,7 @@ t = class:new({
 })
 
 function tv(x,y)
-	return towers_buffer[flr(x/8)][flr(y/8)]
+	return buffer[flr(x/8)][flr(y/8)]
 end
 -->8
 -- enemies --
@@ -226,34 +215,45 @@ e = class:new({
 	hm=false,--hasmoved
 	move=false,
 	tmr=60,
+	dir=1,--3 up 2 down 1 left
 	moveleft=function(_ENV)
-		if not tv(x-8,y) then
+		if not move and not tv(x-8,y) and x>8 then
 			x-=8
 			move=true
+			dir=1
 		end
 	end,
 	movedown=function(_ENV)
 		if not move and not tv(x,y+8) and y<112 then
 			y+=8
 			move=true
+			dir=2
 		end
 	end,
-	movetop=function(_ENV)
-		if not move and  not tv(x,y-8) and y>0 then
+	moveup=function(_ENV)
+		if not move and not tv(x,y-8) and y>0 then
 			y-=8
 			move=true
+			dir=3
 		end
 	end,
 	control=function(_ENV)
 		move=false		
-		if x>8 and not hm then
+		if not hm then			
 			moveleft(_ENV)
-			if rnd(1) then
-			 movetop(_ENV)
+			
+			if dir==3 then
+				moveup(_ENV)
+			elseif dir==2 then
+				movedown(_ENV)
+			end
+						
+			if rnd({false,true}) then
+			 moveup(_ENV)
 				movedown(_ENV)
 			else
 				movedown(_ENV)
-				movetop(_ENV)
+				moveup(_ENV)
 			end
 		end
 		
@@ -264,12 +264,25 @@ e = class:new({
 	end,
 	draw=function(_ENV)
 		spr(s,x,y)
+		print(dir)
 	end
 })
 
 function generateenemies()
 	add(enemies,e:new({x=128,y=0,s=16}))
 	add(enemies,e:new({x=128,y=8,s=17}))
+end
+-->8
+-- buffer --
+buffer={}
+
+function create_buffer()
+ for i=0,31 do
+   buffer[i] = {}
+   for j=0,15 do
+    buffer[i][j]=false
+   end
+ end
 end
 __gfx__
 00000000660660660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
