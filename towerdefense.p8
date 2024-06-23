@@ -11,6 +11,9 @@ end
 
 function _update()
 	s:control()
+	foreach(enemies,function(e)
+		e:control()
+	end)
 	timemanager:update()
 end
 
@@ -100,7 +103,7 @@ timemanager = class:new({
 })
 
 -->8
--- objects --
+-- selector --
 s = class:new({
 	x=0,
 	y=0,
@@ -123,7 +126,7 @@ s = class:new({
 		
 		if not at and btn(4) 
 			and	availabletowers[tpi].q>0 
-			and not towers_buffer[flr(x/8)][flr(y/8)] then
+			and not tv(x,y) then
 				add(towers,t:new({x=x,y=y,s=towertypes[tpi].s}))
 				global.towers_buffer[flr(x/8)][flr(y/8)]=true
 				at=true
@@ -145,6 +148,8 @@ s = class:new({
 	end
 })
 
+-->8
+-- tower --
 towers_buffer={}
 
 function create_towers_buffer()
@@ -202,6 +207,11 @@ t = class:new({
 	end
 })
 
+function tv(x,y)
+	return towers_buffer[flr(x/8)][flr(y/8)]
+end
+-->8
+-- enemies --
 enemies={}
 showenemies=true
 
@@ -209,8 +219,14 @@ e = class:new({
 	x=0,
 	y=0,
 	s=0,
+	hm=false,--hasmoved
+	tmr=60,
 	control=function(_ENV)
-
+		if not tv(x-8,y) and x>8 and not hm then
+			x-=8
+			hm=true
+			timemanager:addtimer(60,function() _ENV.hm=false end,1)
+		end
 	end,
 	draw=function(_ENV)
 		spr(s,x,y)
@@ -221,7 +237,6 @@ function generateenemies()
 	add(enemies,e:new({x=128,y=0,s=16}))
 	add(enemies,e:new({x=128,y=8,s=17}))
 end
-
 __gfx__
 00000000660660660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000600000060cccccc00dddddd00eeeeee00ffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000
