@@ -141,7 +141,7 @@ s = class:new({
 				local reftower=createtower(x,y,towertypes[tpi])
 				at=true
 				availabletowers[tpi].q-=1
-				timemanager:addtimer(15,function() s.at=false end,1)
+				timemanager:addtimer(10,function() s.at=false end,1)
 		end
 		
 		if not ctp and btn(5) then
@@ -461,8 +461,8 @@ levels={
 	{
 			{5,5,3,5},
 			{
-				{2,0,1,6,1},
-				{3,0,1,6,2}
+				{2,4,1,6,1},
+				{3,4,1,6,2}
 			}
 	}
 }
