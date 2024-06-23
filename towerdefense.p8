@@ -143,8 +143,6 @@ s = class:new({
 			and	availabletowers[tpi].q>0 
 			and not get_buffer(x,y).a then
 				local reftower=createtower(x,y,towertypes[tpi])
-				add(towers,reftower)
-				set_buffer(x,y,{a=true,t=reftower})
 				at=true
 				availabletowers[tpi].q-=1
 				timemanager:addtimer(15,function() s.at=false end,1)
@@ -206,9 +204,9 @@ end
 --r reach
 --l life
 towertypes = {
-	{c=12,s=2,as=60,d=1,st=60,r=1000,l=100},
-	{c=13,s=3,as=50,d=5,st=0,r=2000,l=200},
-	{c=14,s=4,as=40,d=1,st=0,r=3000,l=500},
+	{c=12,s=2,as=90,d=1,st=60,r=1000,l=100},
+	{c=13,s=3,as=60,d=5,st=0,r=2000,l=200},
+	{c=14,s=4,as=50,d=1,st=0,r=1000,l=500},
 	{c=15,s=5,as=30,d=15,st=0,r=1000,l=100}
 }
 
@@ -247,7 +245,7 @@ t = class:new({
 	takedamage=function(_ENV,damage)
 		l-=damage
 		if l<=0 then
-			del(towers,_ENV)
+			destroytower(_ENV)
 		end
 	end,
 	draw=function(_ENV)
@@ -259,7 +257,7 @@ t = class:new({
 })
 
 function createtower(x,y,tp)
-	return t:new(
+	local reftower=t:new(
 		{
 			x=x,
 			y=y,
@@ -267,6 +265,15 @@ function createtower(x,y,tp)
 			l=tp.l
 		}
 	)
+	
+	add(towers,reftower)
+	set_buffer(x,y,{a=true,t=reftower})
+	return reftower
+end
+
+function destroytower(t)
+	del(towers,t)
+	set_buffer(t.x,t.y,{a=false})
 end
 -->8
 -- enemies --
