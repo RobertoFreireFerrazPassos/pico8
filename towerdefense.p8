@@ -2,11 +2,7 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 function _init()
- generateavailabletowers(
- 	{5,5,3,5}
- )
- create_buffer()
-	generateenemies()
+	generatelevel()
 end
 
 function _update()
@@ -391,14 +387,24 @@ e = class:new({
 	end
 })
 
-function generateenemies()
-	for i=0,6 do
-		createenemy1(128,i*8)
-	end
+function generateenemies(ens)
+	local lx,ly=16,0
 	
-	for i=0,6 do
-		createenemy2(136,i*8)
-	end
+	foreach(ens,function(e)		
+		if e[5]==1 then
+			for i=e[1],e[1]+e[3]-1 do
+				for j=e[2],e[2]+e[4]-1 do
+					createenemy1((lx+i)*8,(ly+j)*8)
+				end
+			end
+		elseif e[5]==2 then
+			for i=e[1],e[1]+e[3]-1 do
+				for j=e[2],e[2]+e[4]-1 do
+					createenemy2((lx+i)*8,(ly+j)*8)
+				end
+			end
+		end
+	end)
 end
 
 function createenemy1(x,y)
@@ -438,6 +444,28 @@ end
 function set_buffer(x,y,value)
 	buffer[flr(x/8)][flr(y/8)]=value
 end
+-->8
+-- level --
+currentlevel=1
+
+function generatelevel()
+	local level=levels[currentlevel]
+ generateavailabletowers(level[1])
+ create_buffer()
+	generateenemies(level[2])
+end
+
+-- 0,0,1,1,1 1 topleft enemy type 1
+
+levels={
+	{
+			{5,5,3,5},
+			{
+				{2,0,1,6,1},
+				{3,0,1,6,2}
+			}
+	}
+}
 __gfx__
 00000000660660660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000600000060cccccc00dddddd00eeeeee00ffffff000000000000000000000000000000000000000000000000000000000000000000000000000000000
