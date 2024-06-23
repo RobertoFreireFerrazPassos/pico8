@@ -210,7 +210,6 @@ e = class:new({
 	s=0,
 	hm=false,--hasmoved
 	move=false,
-	tmr=60,
 	dir=1,--3 up 2 down 1 left
 	moveleft=function(_ENV)
 		if not move and not get_buffer(x-8,y).a and x>8 then
@@ -270,6 +269,12 @@ e = class:new({
 function generateenemies()
 	add(enemies,e:new({x=128,y=0,s=16}))
 	add(enemies,e:new({x=128,y=8,s=17}))
+	add(enemies,e:new({x=128,y=16,s=16}))
+	add(enemies,e:new({x=128,y=24,s=17}))
+	add(enemies,e:new({x=136,y=0,s=16}))
+	add(enemies,e:new({x=136,y=8,s=17}))
+	add(enemies,e:new({x=136,y=16,s=16}))
+	add(enemies,e:new({x=136,y=24,s=17}))
 end
 -->8
 -- buffer --
