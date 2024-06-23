@@ -202,11 +202,12 @@ end
 --as attack speed
 --d damage
 --st stun
+--r reach
 towertypes = {
-	{c=12,s=2,as=60,d=1,st=60},
-	{c=13,s=3,as=50,d=5,st=0},
-	{c=14,s=4,as=40,d=10,st=0},
-	{c=15,s=5,as=30,d=15,st=0}
+	{c=12,s=2,as=60,d=1,st=60,r=1000},
+	{c=13,s=3,as=50,d=5,st=0,r=2000},
+	{c=14,s=4,as=40,d=10,st=0,r=3000},
+	{c=15,s=5,as=30,d=15,st=0,r=1000}
 }
 
 towers= {}
@@ -232,7 +233,7 @@ t = class:new({
 	 	end
 	 end)
 	 
-	 if ce~=nil then
+	 if ce~=nil and distance(x,y,ce.x,ce.y)<twt.r then
 	 	hd=true
 	 	f=true
 			timemanager:addtimer(twt.as,function() _ENV.hd=false end,1)
