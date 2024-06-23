@@ -2,11 +2,24 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 function _init()
+	gameover=false
+	enemies={}
+	showenemies=true
+	currentlevel=1
+	buffer={}
+	towers= {}
+	availabletowers = {}
 	generatelevel()
 end
 
 function _update()
  timemanager:update()
+ 
+	if life<=0 then
+		gameover=true
+		timemanager:addtimer(30,function() _init() end,1)
+		return
+	end
  
 	if showenemies then
 		return
@@ -25,6 +38,13 @@ end
 
 function _draw()
 	cls()
+	draw_footer()
+	
+	if gameover then
+		draw_gameover()
+		return
+	end
+	
 	if showenemies then
 		camera(127,0)
 		timemanager:addtimer(60,function() showenemies=false end,1)
@@ -38,9 +58,6 @@ function _draw()
 	foreach(enemies,function(e)
 		e:draw()
 	end)
-	
-	draw_availabletowers()
-	draw_life()
 end
 
 -->8
@@ -113,6 +130,19 @@ function distance(x1, y1, x2, y2)
   return (x2 - x1)^2 + (y2 - y1)^2
 end
 
+function draw_life()
+	spr(32,8*8,15*8)
+	print(life,9*8+2,15*8)
+end
+
+function draw_gameover()
+	print("game over",4*8,6*8,8)
+end
+
+function draw_footer()
+	draw_availabletowers()
+	draw_life()
+end
 -->8
 -- selector --
 s = class:new({
@@ -158,17 +188,8 @@ s = class:new({
 	end
 })
 
-life=10
-
-function draw_life()
-	spr(32,8*8,15*8)
-	print(life,9*8+2,15*8)
-end
-
 -->8
 -- tower --
-availabletowers = {}
-
 function generateavailabletowers(ql)
 	local index=1
 	foreach(ql,function(i)
@@ -205,8 +226,6 @@ towertypes = {
 	{c=12,s=4,as=50,d=1,st=0,r=1000,l=500},
 	{c=8,s=5,as=30,d=15,st=0,r=1000,l=100}
 }
-
-towers= {}
 
 t = class:new({
 	x=0,
@@ -273,9 +292,6 @@ function destroytower(t)
 end
 -->8
 -- enemies --
-enemies={}
-showenemies=true
-
 e = class:new({
 	x=0,
 	y=0,
@@ -378,10 +394,10 @@ e = class:new({
 		end
 	end,
 	draw=function(_ENV)
-		if l<80 then
-			spr(s+1,x,y)
-		elseif l<30 then
+		if l<30 then
 		 spr(s+2,x,y)
+		elseif l<80 then
+			spr(s+1,x,y)
 		else
 			spr(s,x,y)
 		end
@@ -410,21 +426,19 @@ end
 
 function createenemy1(x,y)
 	add(enemies,e:new(
-		{x=x,y=y,s=16,l=100,atk=5,spd=100})
+		{x=x,y=y,s=16,l=200,atk=5,spd=200})
 	)
 end
 
 function createenemy2(x,y)
  add(enemies,e:new(
- 	{x=x,y=y,s=19,l=50,atk=5,spd=50})
+ 	{x=x,y=y,s=19,l=120,atk=5,spd=120})
  )
 end
 
 
 -->8
 -- buffer --
-buffer={}
-
 function create_buffer()
  for i=0,31 do
    buffer[i] = {}
@@ -447,30 +461,31 @@ function set_buffer(x,y,value)
 end
 -->8
 -- level --
-currentlevel=1
-
 function generatelevel()
 	local level=levels[currentlevel]
  generateavailabletowers(level[1])
  create_buffer()
 	generateenemies(level[2])
+	life=level[3]
 end
 
 -- 0,0,1,1,1 1 topleft enemy type 1
 
 levels={
 	{
-			{5,5,3,5},
+			{2,1,1,1},
 			{
 				{2,4,1,6,2},
 				{3,4,1,6,1}
-			}
+			},
+			3
 	},
 	{
 			{1,1,1,1},
 			{
 				{2,4,1,4,1}
-			}
+			},
+			2
 	}
 }
 __gfx__
