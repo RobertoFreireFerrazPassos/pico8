@@ -142,8 +142,9 @@ s = class:new({
 		if not at and btn(4) 
 			and	availabletowers[tpi].q>0 
 			and not get_buffer(x,y).a then
-				add(towers,t:new({x=x,y=y,twt=towertypes[tpi]}))
-				set_buffer(x,y,{a=true})
+				local reftower=createtower(x,y,towertypes[tpi])
+				add(towers,reftower)
+				set_buffer(x,y,{a=true,t=reftower})
 				at=true
 				availabletowers[tpi].q-=1
 				timemanager:addtimer(15,function() s.at=false end,1)
@@ -203,11 +204,12 @@ end
 --d damage
 --st stun
 --r reach
+--l life
 towertypes = {
-	{c=12,s=2,as=60,d=1,st=60,r=1000},
-	{c=13,s=3,as=50,d=5,st=0,r=2000},
-	{c=14,s=4,as=40,d=10,st=0,r=3000},
-	{c=15,s=5,as=30,d=15,st=0,r=1000}
+	{c=12,s=2,as=60,d=1,st=60,r=1000,l=100},
+	{c=13,s=3,as=50,d=5,st=0,r=2000,l=200},
+	{c=14,s=4,as=40,d=1,st=0,r=3000,l=500},
+	{c=15,s=5,as=30,d=15,st=0,r=1000,l=100}
 }
 
 towers= {}
@@ -220,6 +222,7 @@ t = class:new({
 	ce=nil,-- closest enemy
 	hd=false,--hasdetected
 	f=false,--fire
+	l=100,--life
 	control=function(_ENV)
 		if hd then
 			return
@@ -241,6 +244,12 @@ t = class:new({
 			timemanager:addtimer(1,function() ce:takedamage(twt.d,twt.st) end,1)
 		end
 	end,
+	takedamage=function(_ENV,damage)
+		l-=damage
+		if l<=0 then
+			del(towers,_ENV)
+		end
+	end,
 	draw=function(_ENV)
 		spr(twt.s,x,y)
 		if f then
@@ -248,6 +257,17 @@ t = class:new({
 		end
 	end
 })
+
+function createtower(x,y,tp)
+	return t:new(
+		{
+			x=x,
+			y=y,
+			twt=tp,
+			l=tp.l
+		}
+	)
+end
 -->8
 -- enemies --
 enemies={}
@@ -262,6 +282,7 @@ e = class:new({
 	dir=1,--3 up 2 down 1 left
 	l=100,--life
 	stun=0,
+	atk=5,--attack
 	moveleft=function(_ENV)
 		if not move and not get_buffer(x-8,y).a and x>0 then
 			x-=8
@@ -281,6 +302,25 @@ e = class:new({
 			y-=8
 			move=true
 			dir=3
+		end
+	end,
+	attacktower=function(_ENV)
+	 local t=get_buffer(x-8,y).t	
+		if t~=nil then
+				t:takedamage(atk)
+			return
+		end
+		
+		t=get_buffer(x,y+8).t
+		if t~=nil then
+			t:takedamage(atk)
+			return
+		end
+		
+		t=get_buffer(x,y-8).t	
+		if t~=nil then
+			t:takedamage(atk)
+			return
 		end
 	end,
 	control=function(_ENV)	
@@ -306,6 +346,10 @@ e = class:new({
 			else
 				movedown(_ENV)
 				moveup(_ENV)
+			end
+			
+			if not move then
+				attacktower(_ENV)
 			end
 		end
 		
@@ -341,15 +385,28 @@ e = class:new({
 })
 
 function generateenemies()
-	add(enemies,e:new({x=128,y=0,s=16}))
-	add(enemies,e:new({x=128,y=8,s=16}))
-	add(enemies,e:new({x=128,y=16,s=16}))
-	add(enemies,e:new({x=128,y=24,s=16}))
-	add(enemies,e:new({x=136,y=0,s=19}))
-	add(enemies,e:new({x=136,y=8,s=19}))
-	add(enemies,e:new({x=136,y=16,s=19}))
-	add(enemies,e:new({x=136,y=24,s=19}))
+	for i=0,6 do
+		createenemy1(128,i*8)
+	end
+	
+	for i=0,6 do
+		createenemy2(136,i*8)
+	end
 end
+
+function createenemy1(x,y)
+	add(enemies,e:new(
+		{x=x,y=y,s=16,l=200,atk=5})
+	)
+end
+
+function createenemy2(x,y)
+ add(enemies,e:new(
+ 	{x=x,y=y,s=19,l=100,atk=10})
+ )
+end
+
+
 -->8
 -- buffer --
 buffer={}
