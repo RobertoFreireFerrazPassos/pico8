@@ -130,9 +130,9 @@ s = class:new({
 		
 		if not at and btn(4) 
 			and	availabletowers[tpi].q>0 
-			and not tv(x,y) then
+			and not get_buffer(x,y).a then
 				add(towers,t:new({x=x,y=y,s=towertypes[tpi].s}))
-				global.buffer[flr(x/8)][flr(y/8)]=true
+				set_buffer(x,y,{a=true})
 				at=true
 				availabletowers[tpi].q-=1
 				timemanager:addtimer(15,function() s.at=false end,1)
@@ -199,10 +199,6 @@ t = class:new({
 		spr(s,x,y)
 	end
 })
-
-function tv(x,y)
-	return buffer[flr(x/8)][flr(y/8)]
-end
 -->8
 -- enemies --
 enemies={}
@@ -217,28 +213,30 @@ e = class:new({
 	tmr=60,
 	dir=1,--3 up 2 down 1 left
 	moveleft=function(_ENV)
-		if not move and not tv(x-8,y) and x>8 then
+		if not move and not get_buffer(x-8,y).a and x>8 then
 			x-=8
 			move=true
 			dir=1
 		end
 	end,
 	movedown=function(_ENV)
-		if not move and not tv(x,y+8) and y<112 then
+		if not move and not get_buffer(x,y+8).a and y<112 then
 			y+=8
 			move=true
 			dir=2
 		end
 	end,
 	moveup=function(_ENV)
-		if not move and not tv(x,y-8) and y>0 then
+		if not move and not get_buffer(x,y-8).a and y>0 then
 			y-=8
 			move=true
 			dir=3
 		end
 	end,
 	control=function(_ENV)
-		move=false		
+		local lx,ly=x,y
+		move=false
+				
 		if not hm then			
 			moveleft(_ENV)
 			
@@ -258,13 +256,14 @@ e = class:new({
 		end
 		
 		if move then
+			set_buffer(lx,ly,{a=false})
+		 set_buffer(x,y,{a=true})
 			hm=true
 			timemanager:addtimer(60,function() _ENV.hm=false end,1)
 		end
 	end,
 	draw=function(_ENV)
 		spr(s,x,y)
-		print(dir)
 	end
 })
 
@@ -280,9 +279,21 @@ function create_buffer()
  for i=0,31 do
    buffer[i] = {}
    for j=0,15 do
-    buffer[i][j]=false
+    buffer[i][j]={a=false}
    end
  end
+end
+
+function get_buffer(x,y)
+	if x<0 or y<0 then
+		return {a=false}
+	end
+	
+	return buffer[flr(x/8)][flr(y/8)]
+end
+
+function set_buffer(x,y,value)
+	buffer[flr(x/8)][flr(y/8)]=value
 end
 __gfx__
 00000000660660660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
