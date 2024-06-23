@@ -286,6 +286,7 @@ e = class:new({
 	l=100,--life
 	stun=0,
 	atk=5,--attack
+	spd=60,--speed
 	moveleft=function(_ENV)
 		if not move and not get_buffer(x-8,y).a and x>0 then
 			x-=8
@@ -365,7 +366,7 @@ e = class:new({
 			else
 			 set_buffer(x,y,{a=true})
 				hm=true
-				timemanager:addtimer(60+stun,function() _ENV.hm=false end,1)
+				timemanager:addtimer(spd+stun,function() _ENV.hm=false end,1)
 			end
 		end
 	end,
@@ -409,13 +410,13 @@ end
 
 function createenemy1(x,y)
 	add(enemies,e:new(
-		{x=x,y=y,s=16,l=200,atk=5})
+		{x=x,y=y,s=16,l=200,atk=5,spd=60})
 	)
 end
 
 function createenemy2(x,y)
  add(enemies,e:new(
- 	{x=x,y=y,s=19,l=100,atk=10})
+ 	{x=x,y=y,s=19,l=100,atk=10,spd=100})
  )
 end
 
@@ -463,6 +464,12 @@ levels={
 			{
 				{2,4,1,6,1},
 				{3,4,1,6,2}
+			}
+	},
+	{
+			{1,1,1,1},
+			{
+				{2,4,1,4,1}
 			}
 	}
 }
