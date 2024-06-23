@@ -11,9 +11,13 @@ end
 
 function _update()
 	s:control()
-	foreach(enemies,function(e)
-		e:control()
-	end)
+	
+	if not showenemies then
+		foreach(enemies,function(e)
+			e:control()
+		end)
+	end
+	
 	timemanager:update()
 end
 
@@ -220,10 +224,40 @@ e = class:new({
 	y=0,
 	s=0,
 	hm=false,--hasmoved
+	move=false,
 	tmr=60,
-	control=function(_ENV)
-		if not tv(x-8,y) and x>8 and not hm then
+	moveleft=function(_ENV)
+		if not tv(x-8,y) then
 			x-=8
+			move=true
+		end
+	end,
+	movedown=function(_ENV)
+		if not move and not tv(x,y+8) and y<112 then
+			y+=8
+			move=true
+		end
+	end,
+	movetop=function(_ENV)
+		if not move and  not tv(x,y-8) and y>0 then
+			y-=8
+			move=true
+		end
+	end,
+	control=function(_ENV)
+		move=false		
+		if x>8 and not hm then
+			moveleft(_ENV)
+			if rnd(1) then
+			 movetop(_ENV)
+				movedown(_ENV)
+			else
+				movedown(_ENV)
+				movetop(_ENV)
+			end
+		end
+		
+		if move then
 			hm=true
 			timemanager:addtimer(60,function() _ENV.hm=false end,1)
 		end
