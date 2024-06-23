@@ -5,6 +5,7 @@ function _init()
  generateavailabletowers(
  	{2,2,2,1}
  )
+ create_towers_buffer()
 	generateenemies()
 end
 
@@ -120,12 +121,14 @@ s = class:new({
 			timemanager:addtimer(5,function() s.hm=false end,1)
 		end
 		
-		if not at and btn(4) and
-				availabletowers[tpi].q>0 then
-			add(towers,t:new({x=x,y=y,s=towertypes[tpi].s}))
-			at=true
-			availabletowers[tpi].q-=1
-			timemanager:addtimer(15,function() s.at=false end,1)
+		if not at and btn(4) 
+			and	availabletowers[tpi].q>0 
+			and not towers_buffer[flr(x/8)][flr(y/8)] then
+				add(towers,t:new({x=x,y=y,s=towertypes[tpi].s}))
+				global.towers_buffer[flr(x/8)][flr(y/8)]=true
+				at=true
+				availabletowers[tpi].q-=1
+				timemanager:addtimer(15,function() s.at=false end,1)
 		end
 		
 		if not ctp and btn(5) then
@@ -141,6 +144,17 @@ s = class:new({
 		pal()
 	end
 })
+
+towers_buffer={}
+
+function create_towers_buffer()
+ for i=0,15 do
+   towers_buffer[i] = {}
+   for j=0,15 do
+    towers_buffer[i][j]=false
+   end
+ end
+end
 
 availabletowers = {}
 
