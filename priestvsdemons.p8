@@ -27,7 +27,7 @@ function _init()
  menuitem(1, "restart level", function() 
  	restart=true
  end)
- menuitem(2, "next", function() nextlv=true end)
+ --menuitem(2, "next", function() nextlv=true end)
 end
 
 function _update()
