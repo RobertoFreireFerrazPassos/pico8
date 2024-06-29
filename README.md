@@ -5,7 +5,9 @@
 
 control + 7 to take picture
 
-export {name}.p8.png. ex: priestvsdemons.p8.png
+export {name}.p8.png. 
+
+ex: export towerdefense.p8.png
 
 https://www.lexaloffle.com/pico-8.php?page=submit
 
