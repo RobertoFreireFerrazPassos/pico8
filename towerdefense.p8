@@ -378,9 +378,15 @@ e = class:new({
 				movedown(_ENV)
 			else
 				if rnd({false,true}) then
-				 dir=3
+				 moveup(_ENV)
+					if not move then
+						movedown(_ENV)
+					end
 				else
-					dir=2
+					movedown(_ENV)
+					if not move then
+						moveup(_ENV)
+					end
 				end
 			end
 		end
