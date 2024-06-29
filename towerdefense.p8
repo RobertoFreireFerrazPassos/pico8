@@ -16,7 +16,9 @@ function _init()
 	generatelevel()
 end
 
-function _update()
+--to improve performance
+--_update instead of _update60 
+function _update60()
 	if restart then
  	restartlevel()
  end
@@ -237,13 +239,13 @@ t = class:new({
 		
 		ce=enemies[1]		
 	 foreach(enemies,function(e)
-	 	if distance(x,y,e.x,e.y)
+	 	if e.x<128 and distance(x,y,e.x,e.y)
 	 		<	distance(x,y,ce.x,ce.y) then
 	 		ce=e
 	 	end
 	 end)
 	 
-	 if ce~=nil and distance(x,y,ce.x,ce.y)<twt.r then
+	 if ce~=nil and ce.x<128 and distance(x,y,ce.x,ce.y)<twt.r then
 	 	hd=true
 	 	f=true
 			timemanager:addtimer(twt.as,function() _ENV.hd=false end,1)
@@ -519,6 +521,16 @@ end
 -- 0,0,1,1,1 1 topleft enemy type 1
 
 levels={
+	{
+			{10,10,10,0},
+			{
+				{1,2,12,10,1}
+			},1,
+			{
+			 {8,5,5},{8,10,5},
+			 {8,7,3},{9,8,4},
+			}
+	},
 	{
 			{3,0,0,0},
 			{
