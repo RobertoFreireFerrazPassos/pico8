@@ -264,7 +264,7 @@ t = class:new({
 		end
 		
 		if f then
-			line(x+4,y+4,ce.x+4,ce.y+4,twt.c)
+			line(x+4,y+2,ce.x+4,ce.y+4,twt.c)
 		end
 	end
 })
@@ -403,6 +403,7 @@ e = class:new({
 		stun=stn
 		if l<=0 then
 			del(enemies,_ENV)
+			set_buffer(x,y,{a=false})
 		end
 	end,
 	draw=function(_ENV)
@@ -443,13 +444,13 @@ end
 
 function createenemy1(x,y)
 	add(enemies,e:new(
-		{x=x,y=y,s=16,l=200,atk=30,spd=200})
+		{x=x,y=y,s=16,l=200,atk=20,spd=200})
 	)
 end
 
 function createenemy2(x,y)
  add(enemies,e:new(
- 	{x=x,y=y,s=19,l=120,atk=30,spd=120})
+ 	{x=x,y=y,s=19,l=120,atk=20,spd=120})
  )
 end
 
@@ -511,7 +512,7 @@ levels={
 				{1,7,1,1,1}
 			},1
 	},{
-			{0,0,0,3},
+			{2,0,0,2},
 			{
 				{1,6,2,4,1}
 			},1
