@@ -8,19 +8,19 @@ end
 
 function _update()
  if game_over then return end
-
- if btnp(⬅️) and can_move(piece_x - 1, piece_y, piece_rot) then
-  piece_x -= 1
- elseif btnp(➡️) and can_move(piece_x + 1, piece_y, piece_rot) then
-  piece_x += 1
+ 
+ if btnp(⬆️) and can_move(piece_x, piece_y - 1, piece_rot) then
+  piece_y -= 1
+ elseif btnp(⬇️) and can_move(piece_x, piece_y + 1, piece_rot) then
+  piece_y += 1
  elseif btnp(🅾️) then
   local new_rot = (piece_rot + 1) % 4
   if can_move(piece_x, piece_y, new_rot) then
    piece_rot = new_rot
   end
  elseif btnp(❎) then
-  while can_move(piece_x, piece_y + 1, piece_rot) do
-   piece_y += 1
+  while can_move(piece_x - 1, piece_y, piece_rot) do
+   piece_x -= 1
   end
   lock_piece()
  end
@@ -28,7 +28,7 @@ function _update()
  fall_timer += 1
  if fall_timer / 60 >= fall_speed then
   if can_move(piece_x, piece_y + 1, piece_rot) then
-   piece_y += 1
+   piece_x -= 1
   else
    lock_piece()
   end
@@ -94,8 +94,8 @@ end
 function spawn_piece()
  current_piece = next_piece or flr(rnd(#shapes)) + 1
  next_piece = flr(rnd(#shapes)) + 1
- piece_x = 3
- piece_y = 1
+ piece_x = 12
+ piece_y = 4
  piece_rot = 0
  fall_timer = 0
  if not can_move(piece_x, piece_y, piece_rot) then
