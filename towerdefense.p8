@@ -219,7 +219,7 @@ s = class:new({
 --r reach
 --l life
 towertypes = {
-	{c=2,s=2,as=300,d=20,st=400,r=800,l=50},
+	{c=2,s=2,as=300,d=22,st=400,r=800,l=50},
 	{c=10,s=3,as=150,d=20,st=0,r=2000,l=50},
 	{c=12,s=4,as=150,d=30,st=0,r=800,l=300},
 	{c=8,s=5,as=150,d=50,st=0,r=800,l=50}
@@ -587,6 +587,13 @@ aaa={
 		}
 }
 
+aab={
+	{5,0,0,0},
+	{
+		{0,4,1,4,1},
+	},1,
+}
+
 lastlevel={
 	{1,1,1,1},
 	{
@@ -595,6 +602,7 @@ lastlevel={
 }
 
 levels={
+	aab,
 	aaa,
 	lastlevel
 }
